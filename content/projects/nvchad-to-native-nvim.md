@@ -1,12 +1,13 @@
-# Moving from NvChad to Native Neovim 0.12
++++
+title = "Moving from NvChad to Native Neovim 0.12"
++++
+
 > Part of my [dotfiles](https://github.com/j-dumas/dotfiles)
 
 ## Summary
----
 I've wanted for a while now to move from [NvChad](https://nvchad.com/) to a more simple and personalized Neovim config. I thus decided to redo all my config in the new Neovim 0.12 from scratch by readding only what I need and throwing out the rest, things like `mason` and `mason-lspconfig`, `lazy`, etc.
 
 ## The Config
----
 ### What's Needed?
 To transform Neovim into the experience I had with NvChad, i.e. close to a full IDE, I'll need
 
@@ -254,7 +255,7 @@ end, { desc = "Format file" })
 ```
 
 
-> [!important] Installing tools
+> [!IMPORTANT] Installing tools
 > I mentioned I wanted to get away from `mason` to install tools like LSPs and formatters. I landed on [`mise`](https://mise.jdx.dev/) to install the tools I need on my system and get them in the `$PATH` so that Neovim can find them. It works just like using `npm` or `pip`, but with the recent security track record of the former, I did not want to install my tools with it.
 > 
 > You can install tools like `stylua` with `mise use -g stylua` and `lua_ls` with `muse use -g lua-language-server`.
@@ -451,6 +452,5 @@ map("n", "<leader>/", "gcc", { desc = "toggle comment", remap = true })
 map("v", "<leader>/", "gc", { desc = "toggle comment", remap = true })
 ```
 
-## Conclusion
----
+# Conclusion
 This rewrite of my config allowed me to have a clean and minimal configuration of my Neovim and learn a bit more about the new features of the 0.12+ version. Everything else I'll add will be in my dotfiles but not detailed here, things like vimtex and other plugins I land on in my researchs.

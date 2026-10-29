@@ -1,8 +1,7 @@
----
-aliases:
-  - C++ Build Process
----
-# Managing C++ Projects Using **CMake**
++++
+title = "Managing C++ Projects Using CMake"
++++
+
 > From [studyplan.dev](https://www.studyplan.dev/cmake/cpp-build-process)
 
 This course is about how to use **CMake** to build C++ projects.
@@ -11,7 +10,9 @@ We learned C++ in my degree, but never how to use **CMake** (maybe because my al
 
 I want to use it more in my next projects, be it in C or C++.
 
-## Sections
+## Lesson 1 - The C++ Build Process
+
+> An introduction to the build pipeline, and how we can orchestrate it manually.
 
 ### Chapter 1 - The C++ Build Process
 This chapter was mostly revision of what I already knew about compilers, with added information about compiler flags and the `ar` program for static libraries.

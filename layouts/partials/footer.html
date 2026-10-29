@@ -1,0 +1,27 @@
+<footer class="footer lualine">
+    <div class="ll-side ll-left">
+        <a class="ll-seg ll-mode" href="{{ $.Site.Home.RelPermalink }}">{{ $.Site.Title }}</a>
+
+        <nav class="ll-seg ll-crumbs" aria-label="breadcrumb">
+            {{ range (where $.Ancestors "IsHome" false).Reverse }}
+                <a href="{{ .RelPermalink }}">{{ .Title }}</a><span class="ll-sep">/</span>
+            {{ end }}
+            <span class="ll-current">{{ $.Title }}</span>
+        </nav>
+
+        {{ with $.Site.Params.footer.socialLink.github }}
+            <a class="ll-seg ll-icon" href="{{ . }}" target="_blank" rel="noopener" aria-label="GitHub">
+                <i class="bi-github"> github.com/j-dumas</i>
+            </a>
+        {{ end }}
+    </div>
+
+    <div class="ll-side ll-right">
+        <a class="ll-seg ll-icon" href="https://github.com/JingWangTW/dark-theme-editor" target="_blank" rel="noopener">
+            <i class="bi-git"></i> Theme: dark-theme-editor
+        </a>
+        <span class="ll-seg ll-mode">
+            <i class="bi-c-circle"></i> {{ now.Year }}
+        </span>
+    </div>
+</footer>

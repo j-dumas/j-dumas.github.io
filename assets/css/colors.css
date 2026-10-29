@@ -1,0 +1,257 @@
+:root {
+    /* Catppuccin Mocha palette */
+    --rosewater: #f5e0dc;
+    --flamingo: #f2cdcd;
+    --pink: #f5c2e7;
+    --mauve: #cba6f7;
+    --red: #f38ba8;
+    --maroon: #eba0ac;
+    --peach: #fab387;
+    --yellow: #f9e2af;
+    --green: #a6e3a1;
+    --teal: #94e2d5;
+    --sky: #89dceb;
+    --sapphire: #74c7ec;
+    --blue: #89b4fa;
+    --lavender: #b4befe;
+    --text: #cdd6f4;
+    --subtext1: #bac2de;
+    --subtext0: #a6adc8;
+    --overlay2: #9399b2;
+    --overlay1: #7f849c;
+    --overlay0: #6c7086;
+    --surface2: #585b70;
+    --surface1: #45475a;
+    --surface0: #313244;
+    --base: #1e1e2e;
+    --mantle: #181825;
+    --crust: #11111b;
+
+    /* Semantic roles */
+    --title: var(--blue);
+    --subtitle: var(--green);
+    --link: var(--mauve);
+    --link-hover: var(--pink);
+    --muted: var(--subtext0);
+    --border: var(--surface1);
+}
+
+/* ---------- Base ---------- */
+body {
+    background-color: var(--base);
+}
+
+header {
+    color: var(--text);
+    border-bottom-color: var(--surface0);
+}
+
+article.main {
+    color: var(--text);
+}
+
+article.main > hr {
+    border-color: var(--border);
+}
+
+/* ---------- Titles ---------- */
+article.main > div.title > h1.title-header,
+article.main > div.home > div.title > h1.title-caption {
+    color: var(--title);
+}
+
+article.main > div.home > div.title > h2.subtitle {
+    color: var(--subtitle);
+}
+
+article.main > div.title > div.author-date-readtime,
+article.main > div.article-meta {
+    color: var(--muted);
+}
+
+article.main > div.title > div.author-date-readtime > div.author:hover {
+    color: var(--rosewater);
+}
+
+/* ---------- Links ---------- */
+article.main > nav#TableOfContents a {
+    color: var(--subtext0)
+}
+
+article.main > div.article-meta > div:where(.breadcumb, .translation) > a,
+article.main > div.content a {
+    color: var(--link);
+}
+
+article.main > nav#TableOfContents a:hover {
+    color: var(--subtext1)
+    text-decoration: none !important;
+}
+
+article.main > div.article-meta > div:where(.breadcumb, .translation) > a:hover,
+article.main > div.content a:hover {
+    color: var(--link-hover);
+}
+
+article.main > div.article-meta > div.translation > a:first-of-type {
+    color: var(--subtext1);
+}
+
+/* ---------- Categories, tags, term lists ---------- */
+article.main > div.article-meta > div.categories > a.cat-btn {
+    background-color: var(--surface1);
+}
+
+article.main > div.article-meta > div.categories > a.cat-btn:hover {
+    background-color: var(--surface2);
+}
+
+article.main > div.article-meta > div.tags > a.tag-btn {
+    background-color: var(--surface0);
+}
+
+article.main > div.article-meta > div.tags > a.tag-btn:hover {
+    background-color: var(--surface1);
+}
+
+article.main > div.list-terms > ul > li {
+    border-color: var(--border);
+}
+
+article.main > div.list-terms > ul > li:hover {
+    border-color: var(--overlay0);
+    background-color: var(--surface0);
+    color: var(--text);
+}
+
+/* ---------- Sidebar ---------- */
+aside.exapandable {
+    background-color: var(--surface0);
+}
+
+aside.exapandable:hover {
+    background-color: var(--surface1);
+}
+
+/* ---------- File tree / navigation ---------- */
+ul.section-tree > li:is(.dir, .file) {
+    color: var(--muted);
+}
+
+article.main > div.list-files > ul.section-tree > li.file:hover,
+ul.section-tree > li > a:hover,
+ul.section-tree > li.dir > span.dir-text:hover {
+    color: var(--text) !important;
+}
+
+ul.section-tree > li:is(.closed-dir, .opened-dir)::before {
+    border-color: var(--blue);
+}
+
+/* ---------- Home page ---------- */
+article.main > div.home > div.recommend > div:where(.left, .right) h3.recommend-title {
+    color: var(--subtitle);
+}
+
+article.main > div.home > div.recommend > div.left > div.start > p.long-description {
+    color: var(--text);
+}
+
+/* Recent posts */
+article.main > div.home > div.recommend > div.left > div.recent > ul.recent-posts-list > li {
+    color: var(--link);
+}
+
+article.main > div.home > div.recommend > div.left > div.recent > ul.recent-posts-list > li:hover {
+    color: var(--text);
+}
+
+article.main > div.home > div.recommend > div.left > div.recent > ul.recent-posts-list > li > span.recent-posts-items-path {
+    color: var(--subtext1);
+}
+
+/* Section tree in walkthroughs */
+article.main > div.home > div.recommend > div.right ul.section-tree > li > a:hover {
+    background-color: var(--surface0);
+    color: var(--link-hover) !important;
+}
+
+/* ---------- Article content ---------- */
+article.main > div.content * {
+    color: var(--text);
+}
+
+article.main > div.content :where(h1, h2) {
+    border-bottom-color: var(--border);
+}
+
+article.main > div.content :is(h1, h2) {
+    color: var(--title);
+}
+
+article.main > div.content :is(h3, h4, h5, h6) {
+    color: var(--subtitle);
+}
+
+article.main > div.content strong {
+    color: var(--rosewater);
+}
+
+article.main > div.content hr {
+    background-color: var(--border);
+}
+
+article.main > div.content dt {
+    color: var(--subtext1);
+}
+
+article.main > div.content blockquote {
+    border-left-color: var(--overlay0);
+    background-color: var(--surface0);
+}
+
+/* Tables */
+article.main > div.content table tr {
+    border-bottom-color: var(--surface2);
+}
+
+article.main > div.content table > tbody > tr:nth-child(2n) {
+    background-color: var(--mantle);
+}
+
+/* Code */
+article.main > div.content code:not(div.highlight code) {
+    background-color: var(--surface1);
+}
+
+article.main > div.content pre:not(div.highlight pre) {
+    background-color: var(--mantle);
+}
+
+/* Copy button */
+article.main > div.content div.codeblock > div.copy-button-box > button.copy-button {
+    color: var(--overlay1);
+    border-color: var(--overlay1);
+}
+
+article.main > div.content div.codeblock > div.copy-button-box > button.copy-button:hover {
+    color: var(--text);
+    border-color: var(--text);
+}
+
+article.main > div.content div.codeblock > div.copy-button-box > button.copy-button[state="copied"] {
+    border-color: var(--green);
+}
+
+article.main > div.content div.codeblock > div.copy-button-box > button.copy-button[state="copied"] > i {
+    color: var(--green);
+}
+
+/* ---------- Scrollbars ---------- */
+:where(article.main, article.main *)::-webkit-scrollbar {
+    background-color: var(--surface0);
+}
+
+:where(article.main, article.main *)::-webkit-scrollbar-thumb {
+    background-color: var(--overlay0);
+}

@@ -1,0 +1,25 @@
+{{ define "main_article" }}
+    <article class="main">
+        <div class="home">
+            <div class="title">
+                {{ with $.Site.Params.header.logo.imgUrl }}
+                    <img class="logo" src="{{ $.Site.BaseURL }}{{ . }}" />
+                {{ end }}
+
+                <h1 class="title-caption">{{ $.Site.Title }}</h1>
+            </div>
+        </div>
+
+        <div class="content">
+            {{ .Content }}
+        </div>
+        <p align="center">
+          <a href="https://skillicons.dev">
+            <img src="https://skillicons.dev/icons?i=c,cpp,zig,python,neovim,linux,latex&perline=8" />
+          </a>
+        </p>
+
+        {{/* Cards for linked pages go here later */}}
+        {{/* <div class="home-cards"></div> */}}
+    </article>
+{{ end }}

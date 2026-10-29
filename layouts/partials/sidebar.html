@@ -1,0 +1,52 @@
+{{ $showToc := false }}
+{{ if isset .Params "includetoc" }}
+    {{ $showToc = .Params.includetoc }}
+{{ else if .Site.Params.page.includeToc }}
+    {{ $showToc = true }}
+{{ end }}
+
+<aside class="sidebar">
+    <div class="sidebar-inner">
+        <div class="tree-title">Tree Viewer</div>
+        {{ partial "module/section_tree" ( dict "context" .Site.Home "currentPage" . ) }}
+
+        {{ if and .IsPage $showToc (gt (len .Fragments.Headings) 0) }}
+            <div class="sidebar-outline">
+                <div class="outline-title">Table of Content</div>
+                {{ .TableOfContents }}
+            </div>
+        {{ end }}
+    </div>
+</aside>
+<aside class="exapandable"></aside>
+
+<script>
+(function () {
+    const KEY = "section-tree-state";
+    const dirs = document.querySelectorAll("aside.sidebar li.dir");
+    const id = (li) => li.querySelector(":scope > a.dir-link")?.getAttribute("href");
+
+    let saved = {};
+    try { saved = JSON.parse(localStorage.getItem(KEY)) || {}; } catch (e) {}
+
+    // Restore. Folders leading to the current page stay open regardless.
+    dirs.forEach((li) => {
+        const k = id(li);
+        if (!k || li.classList.contains("opened-dir")) return;
+        if (saved[k]) {
+            li.classList.remove("closed-dir");
+            li.classList.add("opened-dir");
+        }
+    });
+
+    // Save on leaving the page.
+    addEventListener("pagehide", () => {
+        const state = {};
+        dirs.forEach((li) => {
+            const k = id(li);
+            if (k) state[k] = li.classList.contains("opened-dir");
+        });
+        localStorage.setItem(KEY, JSON.stringify(state));
+    });
+})();
+</script>

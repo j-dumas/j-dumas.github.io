@@ -1,0 +1,85 @@
+/* ---------- Footer (lualine) ---------- */
+footer.lualine {
+    --ll-h: 1.9rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: var(--ll-h);
+    padding: 0;
+    border: none;
+    background-color: var(--base);
+    font-family: "JetBrainsMono Nerd Font", ui-monospace, monospace;
+    font-size: 0.85rem;
+    overflow: hidden;
+}
+
+footer.lualine .ll-side {
+    display: flex;
+    align-items: stretch;
+    height: 100%;
+    min-width: 0;
+}
+
+/* Segments */
+footer.lualine .ll-seg {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0 0.8rem;
+    background-color: var(--bg);
+    color: var(--text);
+    white-space: nowrap;
+    text-decoration: none;
+}
+
+footer.lualine a.ll-seg:hover {
+    filter: brightness(1.15);
+    text-decoration: none;
+}
+
+/* Segment colors (:visited included so the theme's link color can't win) */
+footer.lualine .ll-mode {
+    --bg: var(--green);
+    font-weight: 700;
+}
+
+footer.lualine :is(.ll-mode, a.ll-mode:visited) {
+    color: var(--base);
+}
+
+footer.lualine .ll-icon {
+    --bg: var(--surface0);
+}
+
+/* Breadcrumbs */
+footer.lualine .ll-crumbs {
+    --bg: var(--surface1);
+    min-width: 0;
+    overflow: hidden;
+}
+
+footer.lualine .ll-crumbs a,
+footer.lualine .ll-crumbs a:visited {
+    color: var(--subtext0);
+    text-decoration: none;
+}
+
+footer.lualine .ll-crumbs a:hover {
+    color: var(--text);
+}
+
+footer.lualine .ll-sep {
+    margin: 0 0.35rem;
+    color: var(--overlay1);
+}
+
+footer.lualine .ll-current {
+    color: var(--text);
+}
+
+/* Small screens: hide the theme link */
+@media (max-width: 600px) {
+    footer.lualine .ll-right > .ll-icon {
+        display: none;
+    }
+}

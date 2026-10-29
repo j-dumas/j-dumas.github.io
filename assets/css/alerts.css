@@ -1,0 +1,33 @@
+/* ---------- Alerts (Obsidian-style callouts) ---------- */
+article.main > div.content blockquote.alert {
+    --alert-color: var(--blue);
+    border-left: 4px solid var(--alert-color);
+    border-radius: 4px;
+    background-color: color-mix(in srgb, var(--alert-color) 10%, var(--base));
+    padding: 0.6rem 1rem;
+}
+
+article.main > div.content blockquote {
+    margin-inline: 1.5rem;
+}
+
+/* Reset italics on inner elements, but leave markdown emphasis alone */
+article.main > div.content blockquote.alert :not(em, i, cite) {
+    font-style: normal;
+}
+
+article.main > div.content blockquote.alert .alert-heading {
+    color: var(--alert-color);
+    font-weight: 700;
+    margin: 0 0 0.4rem;
+}
+
+article.main > div.content blockquote.alert > :last-child {
+    margin-bottom: 0;
+}
+
+article.main > div.content blockquote.alert-note      { --alert-color: var(--blue); }
+article.main > div.content blockquote.alert-tip       { --alert-color: var(--green); }
+article.main > div.content blockquote.alert-important { --alert-color: var(--mauve); }
+article.main > div.content blockquote.alert-warning   { --alert-color: var(--yellow); }
+article.main > div.content blockquote.alert-caution   { --alert-color: var(--red); }

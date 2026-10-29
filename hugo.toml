@@ -1,0 +1,25 @@
+baseURL = 'https://j-dumas.github.io'
+locale = 'en-us'
+title = 'Jérémy Dumas'
+theme = 'editor'
+
+[params]
+    [params.globalFrontMatter]
+        localCss = ["css/colors.css", "css/alerts.css", "css/footer.css", "css/sidebar.css", "css/home.css"]
+    [params.header]
+        title = "Jérémy Dumas"
+    [params.footer]
+        gitHash = false
+    [params.footer.socialLink]
+        github = "https://github.com/j-dumas"
+    [params.homepage]
+        showRecentPostsBlock = false
+        recentPostShowUrl = false
+    [params.page]
+        showAuthor = false
+        showDate = false
+        showTimeToRead = false
+
+[markup.highlight]
+  noClasses = true
+  style = "catppuccin-macchiato"

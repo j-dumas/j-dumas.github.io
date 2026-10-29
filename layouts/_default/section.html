@@ -1,0 +1,13 @@
+{{ define "main_article" }}
+    <article class="main">
+        <div class="title">
+            <h1 class="title-header">{{ .Title }}</h1>
+        </div>
+
+        <hr />
+
+        <div class="list-files">
+            {{ partial "module/section_tree" ( dict "context" . "currentPage" . ) }}
+        </div>
+    </article>
+{{ end }}

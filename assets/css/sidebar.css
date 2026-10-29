@@ -1,0 +1,120 @@
+/* ---------- Sidebar ---------- */ 
+aside.sidebar {
+    --row-gap: 0.25rem; /* increase for more air */
+}
+
+aside.exapandable {
+    background-color: var(--surface0);
+}
+
+aside.exapandable:hover {
+    background-color: var(--surface1);
+}
+
+/* ---------- Layout: tree on top, outline below, equal height ---------- */
+aside.sidebar > .sidebar-inner {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    /* If the sidebar has no definite height, use this instead:
+       height: calc(100vh - 4rem); */
+}
+
+aside.sidebar .sidebar-inner > ul.section-tree,
+aside.sidebar .sidebar-inner > .sidebar-outline {
+    flex: 1 1 0;
+    min-height: 0;
+    overflow-y: auto;
+}
+
+aside.sidebar .sidebar-inner > ul.section-tree {
+    height: auto;
+    margin-bottom: 0;
+}
+
+aside.sidebar .tree-title {
+    margin: 0;
+    padding: 1rem 1rem 0;
+    color: var(--subtitle);
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+}
+
+/* ---------- Outline (TOC) ---------- */
+aside.sidebar .sidebar-outline {
+    margin-top: 0;
+    padding: 1rem 1rem 0;
+    border-top: 1px solid var(--surface1);
+}
+
+aside.sidebar .sidebar-outline .outline-title {
+    margin-bottom: 0.4rem;
+    color: var(--subtitle);
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+}
+
+aside.sidebar .sidebar-outline ul {
+    margin: 0;
+    padding-left: 0.9rem;
+    list-style: none;
+}
+
+aside.sidebar .sidebar-outline > nav > ul {
+    padding-left: 0;
+}
+
+aside.sidebar .sidebar-outline li {
+    color: var(--subtext0);
+}
+
+aside.sidebar .sidebar-outline a,
+aside.sidebar .sidebar-outline a:visited {
+    color: var(--subtext0);
+    text-decoration: none;
+}
+
+aside.sidebar .sidebar-outline a:hover {
+    color: var(--link);
+    text-decoration: none;
+}
+
+aside.sidebar .sidebar-outline li > a {
+    display: inline-block;
+    padding-top: var(--row-gap);
+    padding-bottom: var(--row-gap);
+}
+
+/* Hide the theme's arrow */
+ul.section-tree > li:is(.closed-dir, .opened-dir)::before {
+    display: none;
+}
+
+/* [+] / [-] toggle */
+ul.section-tree li.dir > span.dir-toggle {
+    cursor: pointer;
+    color: var(--blue);
+    font-family: ui-monospace, monospace;
+}
+
+ul.section-tree li.closed-dir > span.dir-toggle::before { content: "[+]"; }
+ul.section-tree li.opened-dir > span.dir-toggle::before { content: "[-]"; }
+
+ul.section-tree li.dir > span.dir-toggle:hover {
+    color: var(--green);
+}
+
+/* Section name link */
+ul.section-tree li.dir > a.dir-link,
+ul.section-tree li.dir > a.dir-link:visited {
+    color: var(--muted);
+    text-decoration: none;
+}
+
+ul.section-tree li.dir > a.dir-link:hover {
+    color: var(--text);
+}

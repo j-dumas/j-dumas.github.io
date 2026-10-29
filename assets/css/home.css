@@ -1,0 +1,36 @@
+article.main:has(> div.home) {
+    padding: 8vh 5vw;
+    --artile_main_width: calc(85% - 3pt - 10vw - 1px);
+}
+
+article.main:has(> div.home) > div.home > div.title {
+    text-align: left;
+}
+
+article.main > div.home {
+    height: auto;
+}
+
+/* ---------- Title ---------- */
+article.main > div.home > div.title {
+    padding: 0;
+    text-align: left;
+}
+
+article.main > div.home > div.title > h1.title-caption {
+    margin: 0 0 0.3em;
+    font-size: clamp(2.5rem, 6vw, 4rem);
+    font-weight: 700;
+    line-height: 1.1;
+    white-space: normal;
+    color: var(--title);
+}
+
+article.main > div.home > div.title > h2.subtitle {
+    margin: 0 0 1rem;
+    font-size: 1.3em;
+    font-weight: 400;
+    line-height: 1.4;
+    white-space: normal;
+    color: var(--subtitle);
+}

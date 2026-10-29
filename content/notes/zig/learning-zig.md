@@ -1,11 +1,8 @@
-# Learning Zig
-- Zig Book
-	- [[Introducing Zig]]
-	- ...
-- Ziglings
-	- ...
++++
+title = "Learning Zig"
++++
 
-## [Overview](https://ziglang.org/learn/overview/) of features
+## [Overview of features](https://ziglang.org/learn/overview/)
 ### Control Flow
 Zig has no **hidden control flow** or any other hidden allocations and no preprocessor like C nor macros. They give a few examples, like 
 - decorators like `@property` from D that are called when the field is accessed;
