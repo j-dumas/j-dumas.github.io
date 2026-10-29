@@ -1,1698 +1,354 @@
-
-<!doctype html>
-<html lang="en" class="no-js">
-  <head>
-    
-      <meta charset="utf-8">
-      <meta name="viewport" content="width=device-width,initial-scale=1">
-      
-        <meta name="description" content="My journey of learning">
-      
-      
-      
-        <link rel="canonical" href="https://j-dumas.github.io/learning-logs/projects/nvchad-to-native-nvim/">
-      
-      
-        <link rel="prev" href="../projects-overview/">
-      
-      
-        <link rel="next" href="../podman-devcontainers/">
-      
-      
-        
-      
-      
-      <link rel="icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
-    
-    
-      
-        <title>Moving from NvChad to Native Neovim 0.12 - On What I've Learned</title>
-      
-    
-    
-      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
-      
-        
-        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
-      
-      
-
-
-    
-    
-      
-    
-    
-      
-        
-        
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
-        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
-      
-    
-    
-      <link rel="stylesheet" href="../../css/extra.css">
-    
-    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
-    
-      
-
-    
-    
-  </head>
-  
-  
-    
-    
-      
-    
-    
-    
-    
-    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="pink" data-md-color-accent="indigo">
-  
-    
-    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
-    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
-    <label class="md-overlay" for="__drawer"></label>
-    <div data-md-component="skip">
-      
-        
-        <a href="#moving-from-nvchad-to-native-neovim-012" class="md-skip">
-          Skip to content
-        </a>
-      
-    </div>
-    <div data-md-component="announce">
-      
-    </div>
-    
-    
-      
-
-<header class="md-header" data-md-component="header">
-  <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="../.." title="On What I&#39;ve Learned" class="md-header__button md-logo" aria-label="On What I've Learned" data-md-component="logo">
-      
-  
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16c0 1.11.89 2 2 2h12c1.11 0 2-.89 2-2V8zm4 18H6V4h7v5h5zm-8.46-4.35 2.09 2.09L10.35 19 7 15.65l3.35-3.35 1.28 1.26zm7.46 0L13.65 19l-1.27-1.26 2.09-2.09-2.09-2.09 1.27-1.26z"/></svg>
-
-    </a>
-    <label class="md-header__button md-icon" for="__drawer">
-      
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
-    </label>
-    <div class="md-header__title" data-md-component="header-title">
-      <div class="md-header__ellipsis">
-        <div class="md-header__topic">
-          <span class="md-ellipsis">
-            On What I've Learned
-          </span>
-        </div>
-        <div class="md-header__topic" data-md-component="header-topic">
-          <span class="md-ellipsis">
-            
-              Moving from NvChad to Native Neovim 0.12
-            
-          </span>
-        </div>
-      </div>
-    </div>
-    
-      
-        <form class="md-header__option" data-md-component="palette">
-  
-    
-    
-    
-    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="pink" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
-    
-      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 6H7c-3.31 0-6 2.69-6 6s2.69 6 6 6h10c3.31 0 6-2.69 6-6s-2.69-6-6-6m0 10H7c-2.21 0-4-1.79-4-4s1.79-4 4-4h10c2.21 0 4 1.79 4 4s-1.79 4-4 4M7 9c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3"/></svg>
-      </label>
-    
-  
-    
-    
-    
-    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="deep-purple" data-md-color-accent="teal"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
-    
-      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 7H7a5 5 0 0 0-5 5 5 5 0 0 0 5 5h10a5 5 0 0 0 5-5 5 5 0 0 0-5-5m0 8a3 3 0 0 1-3-3 3 3 0 0 1 3-3 3 3 0 0 1 3 3 3 3 0 0 1-3 3"/></svg>
-      </label>
-    
-  
-</form>
-      
-    
-    
-      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
-    
-    
-    
-      
-      
-        <label class="md-header__button md-icon" for="__search">
-          
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
-        </label>
-        <div class="md-search" data-md-component="search" role="dialog">
-  <label class="md-search__overlay" for="__search"></label>
-  <div class="md-search__inner" role="search">
-    <form class="md-search__form" name="search">
-      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
-      <label class="md-search__icon md-icon" for="__search">
-        
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
-        
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
-      </label>
-      <nav class="md-search__options" aria-label="Search">
-        
-        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
-          
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
-        </button>
-      </nav>
-      
-    </form>
-    <div class="md-search__output">
-      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
-        <div class="md-search-result" data-md-component="search-result">
-          <div class="md-search-result__meta">
-            Initializing search
-          </div>
-          <ol class="md-search-result__list" role="presentation"></ol>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-      
-    
-    
-      <div class="md-header__source">
-        <a href="https://github.com/j-dumas" title="Go to repository" class="md-source" data-md-component="source">
-  <div class="md-source__icon md-icon">
-    
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
-  </div>
-  <div class="md-source__repository">
-    github.com/j-dumas
-  </div>
-</a>
-      </div>
-    
-  </nav>
-  
-</header>
-    
-    <div class="md-container" data-md-component="container">
-      
-      
-        
-          
-            
-<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
-  <div class="md-grid">
-    <ul class="md-tabs__list">
-      
-        
-  
-  
-  
-  
-    <li class="md-tabs__item">
-      <a href="../.." class="md-tabs__link">
-        
-  
-  
-    
-  
-  Home
-
-      </a>
-    </li>
-  
-
-      
-        
-  
-  
-  
-  
-    
-    
-      <li class="md-tabs__item">
-        <a href="../../notes/notes-overview/" class="md-tabs__link">
-          
-  
-  
-  Notes
-
-        </a>
-      </li>
-    
-  
-
-      
-        
-  
-  
-  
-    
-  
-  
-    
-    
-      <li class="md-tabs__item md-tabs__item--active">
-        <a href="../projects-overview/" class="md-tabs__link">
-          
-  
-  
-  Projects
-
-        </a>
-      </li>
-    
-  
-
-      
-    </ul>
-  </div>
-</nav>
-          
-        
-      
-      <main class="md-main" data-md-component="main">
-        <div class="md-main__inner md-grid">
-          
-            
-              
-              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
-                <div class="md-sidebar__scrollwrap">
-                  <div class="md-sidebar__inner">
-                    
-
-
-  
-
-
-<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
-  <label class="md-nav__title" for="__drawer">
-    <a href="../.." title="On What I&#39;ve Learned" class="md-nav__button md-logo" aria-label="On What I've Learned" data-md-component="logo">
-      
-  
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16c0 1.11.89 2 2 2h12c1.11 0 2-.89 2-2V8zm4 18H6V4h7v5h5zm-8.46-4.35 2.09 2.09L10.35 19 7 15.65l3.35-3.35 1.28 1.26zm7.46 0L13.65 19l-1.27-1.26 2.09-2.09-2.09-2.09 1.27-1.26z"/></svg>
-
-    </a>
-    On What I've Learned
-  </label>
-  
-    <div class="md-nav__source">
-      <a href="https://github.com/j-dumas" title="Go to repository" class="md-source" data-md-component="source">
-  <div class="md-source__icon md-icon">
-    
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
-  </div>
-  <div class="md-source__repository">
-    github.com/j-dumas
-  </div>
-</a>
-    </div>
-  
-  <ul class="md-nav__list" data-md-scrollfix>
-    
-      
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../.." class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Home
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    
-    
-    
-    
-      
-      
-    
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-        
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
-        
-          
-          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
-            
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Notes
-  
-
-    
-  </span>
-  
-  
-
-            <span class="md-nav__icon md-icon"></span>
-          </label>
-        
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_2">
-            <span class="md-nav__icon md-icon"></span>
-            
-  
-    Notes
-  
-
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../notes/notes-overview/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Overview
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    
-    
-    
-    
-      
-      
-    
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-        
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_2" >
-        
-          
-          <label class="md-nav__link" for="__nav_2_2" id="__nav_2_2_label" tabindex="0">
-            
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Systems
-  
-
-    
-  </span>
-  
-  
-
-            <span class="md-nav__icon md-icon"></span>
-          </label>
-        
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_2_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_2_2">
-            <span class="md-nav__icon md-icon"></span>
-            
-  
-    Systems
-  
-
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../notes/systems/managing-cpp-cmake/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Managing C++ Projects Using CMake
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
-      
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    
-    
-    
-    
-      
-      
-    
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-        
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3" >
-        
-          
-          <label class="md-nav__link" for="__nav_2_3" id="__nav_2_3_label" tabindex="0">
-            
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Zig
-  
-
-    
-  </span>
-  
-  
-
-            <span class="md-nav__icon md-icon"></span>
-          </label>
-        
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_3_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_2_3">
-            <span class="md-nav__icon md-icon"></span>
-            
-  
-    Zig
-  
-
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../notes/zig/learning-zig/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Learning Zig
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
-      
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
-      
-    </li>
-  
-
-    
-      
-      
-  
-  
-    
-  
-  
-  
-    
-    
-    
-    
-      
-        
-        
-      
-      
-    
-    
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
-      
-        
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
-        
-          
-          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
-            
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Projects
-  
-
-    
-  </span>
-  
-  
-
-            <span class="md-nav__icon md-icon"></span>
-          </label>
-        
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
-          <label class="md-nav__title" for="__nav_3">
-            <span class="md-nav__icon md-icon"></span>
-            
-  
-    Projects
-  
-
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../projects-overview/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Overview
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-    
-  
-  
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Moving from NvChad to Native Neovim 0.12
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Moving from NvChad to Native Neovim 0.12
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#summary" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Summary
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#the-config" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        The Config
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="The Config">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#whats-needed" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        What's Needed?
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#a-clean-structure" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        A Clean Structure
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#common-options" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Common Options
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#ui-colorscheme-and-statusline" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        UI: Colorscheme and Statusline
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#neotree-a-file-viewer" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        NeoTree: A File Viewer
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#treesitter-better-highlighting-and-parsers" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Treesitter: Better Highlighting and Parsers
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#conform-a-formatter" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Conform: A Formatter
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#lsps" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        LSPs
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#fzf-lua-a-file-picker" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Fzf-Lua: A File Picker
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#blink-autocompletion" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Blink: Autocompletion
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#quality-of-life" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Quality of Life
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#git-client" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Git Client
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#keymaps" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Keymaps
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#conclusion" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Conclusion
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../podman-devcontainers/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Podman Development Containers
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
-      
-    </li>
-  
-
-    
-  </ul>
-</nav>
-                  </div>
-                </div>
-              </div>
-            
-            
-              
-              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
-                <div class="md-sidebar__scrollwrap">
-                  <div class="md-sidebar__inner">
-                    
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#summary" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Summary
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#the-config" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        The Config
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="The Config">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#whats-needed" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        What's Needed?
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#a-clean-structure" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        A Clean Structure
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#common-options" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Common Options
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#ui-colorscheme-and-statusline" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        UI: Colorscheme and Statusline
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#neotree-a-file-viewer" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        NeoTree: A File Viewer
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#treesitter-better-highlighting-and-parsers" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Treesitter: Better Highlighting and Parsers
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#conform-a-formatter" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Conform: A Formatter
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#lsps" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        LSPs
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#fzf-lua-a-file-picker" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Fzf-Lua: A File Picker
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#blink-autocompletion" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Blink: Autocompletion
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#quality-of-life" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Quality of Life
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#git-client" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Git Client
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#keymaps" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Keymaps
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#conclusion" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Conclusion
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-                  </div>
-                </div>
-              </div>
-            
-          
-          
-            <div class="md-content" data-md-component="content">
-              
-              <article class="md-content__inner md-typeset">
-                
-                  
-
-
-  
-  
-
-
-<h1 id="moving-from-nvchad-to-native-neovim-012">Moving from NvChad to Native Neovim 0.12</h1>
-<blockquote>
-<p>Part of my <a href="https://github.com/j-dumas/dotfiles">dotfiles</a></p>
-</blockquote>
-<h2 id="summary">Summary</h2>
-<hr />
-<p>I've wanted for a while now to move from <a href="https://nvchad.com/">NvChad</a> to a more simple and personalized Neovim config. I thus decided to redo all my config in the new Neovim 0.12 from scratch by readding only what I need and throwing out the rest, things like <code>mason</code> and <code>mason-lspconfig</code>, <code>lazy</code>, etc.</p>
-<h2 id="the-config">The Config</h2>
-<hr />
-<h3 id="whats-needed">What's Needed?</h3>
-<p>To transform Neovim into the experience I had with NvChad, i.e. close to a full IDE, I'll need</p>
-<ul class="task-list">
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> Colorscheme</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> Statusline</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> Tree</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> Highlight</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> Formatter</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> LSP</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> File picker/live grep</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> Autocompletion</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> A Git client to not rely on switching tmux panes for lazygit</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Linter</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Debugger</li>
-</ul>
-<h3 id="a-clean-structure">A Clean Structure</h3>
-<p>Let's start with the structure of the config directory:<br />
-<div class="highlight"><pre><span></span><code>~/.config/nvim/
-├── init.lua
-└── lua/
-    ├── plugins/
-    |   ├── init.lua
-    |   ├── cmp.lua
-    |   ├── format.lua
-    |   ├── fzf-lua.lua
-    |   ├── lsp.lua
-    |   ├── qol.lua
-    |   ├── tree.lua
-    |   ├── treesitter.lua
-    |   └── ui.lua
-    ├── autocmds.lua
-    ├── keymaps.lua
-    └── options.lua
-</code></pre></div></p>
-<h3 id="common-options">Common Options</h3>
-<p>Here are the options I used. These were taken from the NvChad config to have a similar feel and also from <a href="https://dotfiles.substack.com/p/neovim-options-the-most-common-ones">a list of the most common options in Neovim</a>, like tab size, splitting directions, clipboard and rounded borders, etc.<br />
-<div class="highlight"><pre><span></span><code><span class="nb">require</span><span class="p">(</span><span class="s1">'vim._core.ui2'</span><span class="p">).</span><span class="nf">enable</span><span class="p">()</span>
-
-<span class="nv">vim</span><span class="p">.</span><span class="py">g</span><span class="p">.</span><span class="py">netrw_banner</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span>
-<span class="nv">vim</span><span class="p">.</span><span class="py">g</span><span class="p">.</span><span class="py">mapleader</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">' '</span>
-
-<span class="nv">vim</span><span class="p">.</span><span class="py">o</span><span class="p">.</span><span class="py">nu</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
-<span class="nv">vim</span><span class="p">.</span><span class="py">o</span><span class="p">.</span><span class="py">relativenumber</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
-
-<span class="nv">vim</span><span class="p">.</span><span class="py">o</span><span class="p">.</span><span class="py">tabstop</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">4</span>
-<span class="nv">vim</span><span class="p">.</span><span class="py">o</span><span class="p">.</span><span class="py">softtabstop</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">4</span>
-<span class="nv">vim</span><span class="p">.</span><span class="py">o</span><span class="p">.</span><span class="py">shiftwidth</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">4</span>
-<span class="nv">vim</span><span class="p">.</span><span class="py">o</span><span class="p">.</span><span class="py">expandtab</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
-<span class="nv">vim</span><span class="p">.</span><span class="py">o</span><span class="p">.</span><span class="py">smartindent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
-
-<span class="nv">vim</span><span class="p">.</span><span class="py">o</span><span class="p">.</span><span class="py">inccommand</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"split"</span>
-<span class="nv">vim</span><span class="p">.</span><span class="py">o</span><span class="p">.</span><span class="py">splitbelow</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
-<span class="nv">vim</span><span class="p">.</span><span class="py">o</span><span class="p">.</span><span class="py">splitright</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
-
-<span class="nv">vim</span><span class="p">.</span><span class="py">o</span><span class="p">.</span><span class="py">ignorecase</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
-<span class="nv">vim</span><span class="p">.</span><span class="py">o</span><span class="p">.</span><span class="py">smartcase</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
-<span class="nv">vim</span><span class="p">.</span><span class="py">o</span><span class="p">.</span><span class="py">laststatus</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">3</span>
-
-<span class="nv">vim</span><span class="p">.</span><span class="py">o</span><span class="p">.</span><span class="py">swapfile</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span>
-<span class="nv">vim</span><span class="p">.</span><span class="py">o</span><span class="p">.</span><span class="py">backup</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span>
-<span class="nv">vim</span><span class="p">.</span><span class="py">o</span><span class="p">.</span><span class="py">undodir</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">vim</span><span class="p">.</span><span class="py">fn</span><span class="p">.</span><span class="nf">stdpath</span><span class="p">(</span><span class="s2">"data"</span><span class="p">)</span><span class="w"> </span><span class="o">..</span><span class="w"> </span><span class="s2">"/undodir"</span>
-<span class="nv">vim</span><span class="p">.</span><span class="py">o</span><span class="p">.</span><span class="py">undofile</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
-
-<span class="nv">vim</span><span class="p">.</span><span class="py">o</span><span class="p">.</span><span class="py">clipboard</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"unnamedplus"</span>
-<span class="nv">vim</span><span class="p">.</span><span class="py">o</span><span class="p">.</span><span class="py">cursorline</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
-<span class="nv">vim</span><span class="p">.</span><span class="py">o</span><span class="p">.</span><span class="py">cursorlineopt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"number"</span>
-<span class="nv">vim</span><span class="p">.</span><span class="py">o</span><span class="p">.</span><span class="py">scrolloff</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">8</span>
-<span class="nv">vim</span><span class="p">.</span><span class="py">o</span><span class="p">.</span><span class="py">signcolumn</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"yes"</span>
-<span class="nv">vim</span><span class="p">.</span><span class="py">o</span><span class="p">.</span><span class="py">termguicolors</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
-<span class="nv">vim</span><span class="p">.</span><span class="py">opt</span><span class="p">.</span><span class="py">whichwrap</span><span class="p">:</span><span class="py">append</span><span class="w"> </span><span class="s2">"&lt;&gt;[]hl"</span>
-<span class="nv">vim</span><span class="p">.</span><span class="py">o</span><span class="p">.</span><span class="py">winborder</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"rounded"</span>
-</code></pre></div></p>
-<h3 id="ui-colorscheme-and-statusline">UI: Colorscheme and Statusline</h3>
-<p>Here are the three plugins I use for UI: <a href="https://github.com/catppuccin/nvim"><code>catppuccin-nvim</code></a>, <a href="https://github.com/nvim-lualine/lualine.nvim"><code>lualine</code></a> and some icons with <a href="https://github.com/nvim-tree/nvim-web-devicons"><code>nvim-web-devicons</code></a>.<br />
-<div class="highlight"><pre><span></span><code><span class="nv">vim</span><span class="p">.</span><span class="py">pack</span><span class="p">.</span><span class="py">add</span><span class="w"> </span><span class="p">{</span><span class="w"> </span>
-<span class="w">    </span><span class="p">{</span><span class="w"> </span>
-<span class="w">        </span><span class="nv">src</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"https://github.com/catppuccin/nvim"</span><span class="p">,</span>
-<span class="w">        </span><span class="nv">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"catppuccin"</span><span class="w"> </span>
-<span class="w">    </span><span class="p">}</span><span class="w"> </span><span class="p">,</span>
-<span class="w">    </span><span class="s1">'https://github.com/nvim-tree/nvim-web-devicons'</span><span class="p">,</span>
-<span class="w">    </span><span class="s1">'https://github.com/nvim-lualine/lualine.nvim'</span>
-<span class="p">}</span>
-</code></pre></div></p>
-<p>Since I already use Catppuccin Mocha nearly everywhere, I installed it for Neovim.  For a terminal, I use kitty with a transparent background, so I opted to have Neovim transparent as well. I also modified the colors of the sections to fit my tmux look (which is kind of a bastard between the dracula tmux plugin and catppuccin colors). I changed some highlights to fit my taste, like the <code>MatchParen</code> to remove colors of matching brackets and only keep the background highlight.<br />
-<div class="highlight"><pre><span></span><code><span class="nb">require</span><span class="p">(</span><span class="s2">"catppuccin"</span><span class="p">).</span><span class="nf">setup</span><span class="p">({</span>
-<span class="w">    </span><span class="nv">flavour</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"mocha"</span><span class="p">,</span>
-<span class="w">    </span><span class="nv">transparent_background</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
-<span class="w">    </span><span class="nv">custom_highlights</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kr">function</span><span class="p">(</span><span class="nv">colors</span><span class="p">)</span>
-<span class="w">        </span><span class="kr">return</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="nv">MatchParen</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nv">fg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">colors</span><span class="p">.</span><span class="py">none</span><span class="w"> </span><span class="p">},</span>
-<span class="w">            </span><span class="nv">IncSearch</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nv">bg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">colors</span><span class="p">.</span><span class="py">green</span><span class="w"> </span><span class="p">},</span>
-<span class="w">            </span><span class="nv">NormalFloat</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nv">bg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">colors</span><span class="p">.</span><span class="py">none</span><span class="w"> </span><span class="p">},</span>
-<span class="w">            </span><span class="nv">FloatBorder</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nv">bg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">colors</span><span class="p">.</span><span class="py">none</span><span class="w"> </span><span class="p">},</span>
-<span class="w">        </span><span class="p">}</span>
-<span class="w">    </span><span class="kr">end</span><span class="p">,</span>
-<span class="w">    </span><span class="nv">integrations</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="nv">lualine</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="nv">mocha</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kr">function</span><span class="p">(</span><span class="nv">colors</span><span class="p">)</span>
-<span class="w">                </span><span class="kr">return</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                    </span><span class="nv">normal</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                        </span><span class="nv">a</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nv">bg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"#8bc2f0"</span><span class="w"> </span><span class="p">},</span>
-<span class="w">                        </span><span class="nv">b</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nv">fg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">colors</span><span class="p">.</span><span class="py">text</span><span class="w"> </span><span class="p">},</span>
-<span class="w">                        </span><span class="nv">c</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nv">fg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">colors</span><span class="p">.</span><span class="py">surface2</span><span class="w"> </span><span class="p">},</span>
-<span class="w">                    </span><span class="p">},</span>
-<span class="w">                    </span><span class="nv">insert</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                        </span><span class="nv">b</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nv">fg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">colors</span><span class="p">.</span><span class="py">text</span><span class="w"> </span><span class="p">},</span>
-<span class="w">                    </span><span class="p">},</span>
-<span class="w">                    </span><span class="nv">visual</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                        </span><span class="nv">b</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nv">fg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">colors</span><span class="p">.</span><span class="py">text</span><span class="w"> </span><span class="p">},</span>
-<span class="w">                    </span><span class="p">},</span>
-<span class="w">                    </span><span class="nv">command</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                        </span><span class="nv">b</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nv">fg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">colors</span><span class="p">.</span><span class="py">text</span><span class="w"> </span><span class="p">},</span>
-<span class="w">                    </span><span class="p">},</span>
-<span class="w">                </span><span class="p">}</span>
-<span class="w">            </span><span class="kr">end</span>
-<span class="w">        </span><span class="p">}</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">})</span>
-<span class="nv">vim</span><span class="p">.</span><span class="py">cmd</span><span class="p">.</span><span class="py">colorscheme</span><span class="w"> </span><span class="s2">"catppuccin-nvim"</span>
-</code></pre></div></p>
-<p>And here is lualine as I like:<br />
-<div class="highlight"><pre><span></span><code><span class="nb">require</span><span class="p">(</span><span class="s1">'lualine'</span><span class="p">).</span><span class="nf">setup</span><span class="p">({</span>
-<span class="w">    </span><span class="nv">options</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="nv">component_separators</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="nv">left</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">''</span><span class="p">,</span><span class="w"> </span><span class="nv">right</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">''</span><span class="p">},</span>
-<span class="w">        </span><span class="nv">section_separators</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="nv">left</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'◤'</span><span class="p">,</span><span class="w"> </span><span class="nv">right</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">''</span><span class="p">}</span>
-<span class="w">    </span><span class="p">},</span>
-<span class="w">    </span><span class="nv">sections</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="nv">lualine_a</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="s1">'mode'</span><span class="p">},</span>
-<span class="w">        </span><span class="nv">lualine_b</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{{</span><span class="s1">'filename'</span><span class="p">,</span><span class="w"> </span><span class="nv">path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">}},</span>
-<span class="w">        </span><span class="nv">lualine_c</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="s1">'branch'</span><span class="p">,</span><span class="w"> </span><span class="s1">'diff'</span><span class="p">},</span>
-<span class="w">        </span><span class="nv">lualine_x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="s1">'diagnostics'</span><span class="p">,</span><span class="w"> </span><span class="s1">'lsp_status'</span><span class="p">},</span>
-<span class="w">        </span><span class="nv">lualine_y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="s1">'location'</span><span class="p">},</span>
-<span class="w">        </span><span class="nv">lualine_z</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="s1">'progress'</span><span class="p">}</span>
-<span class="w">    </span><span class="p">},</span>
-<span class="w">    </span><span class="nv">extensions</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="s1">'nvim-tree'</span><span class="p">}</span>
-<span class="p">})</span>
-</code></pre></div></p>
-<h3 id="neotree-a-file-viewer">NeoTree: A File Viewer</h3>
-<p>I'm used to having a file viewer in the side bar and did not really want to use <code>netrw</code>, so I decided to try <a href="https://github.com/nvim-neo-tree/neo-tree.nvim"><code>neo-tree</code></a>. I added  <code>nvim-window-picker</code> for picking a specific window when opening a file instead of opening in the last one. I added nicer colors for the window picker because the default was bright green. It's now red with a transparent background. Finally I changed the mappings to always ask which window to open a file when there are splits.<br />
-<div class="highlight"><pre><span></span><code><span class="nv">vim</span><span class="p">.</span><span class="py">pack</span><span class="p">.</span><span class="nf">add</span><span class="p">({</span>
-<span class="w">  </span><span class="p">{</span>
-<span class="w">    </span><span class="nv">src</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'https://github.com/nvim-neo-tree/neo-tree.nvim'</span><span class="p">,</span>
-<span class="w">    </span><span class="nv">version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">vim</span><span class="p">.</span><span class="py">version</span><span class="p">.</span><span class="nf">range</span><span class="p">(</span><span class="s1">'3'</span><span class="p">)</span>
-<span class="w">  </span><span class="p">},</span>
-<span class="w">  </span><span class="c1">-- Dependencies</span>
-<span class="w">  </span><span class="s2">"https://github.com/nvim-lua/plenary.nvim"</span><span class="p">,</span>
-<span class="w">  </span><span class="s2">"https://github.com/MunifTanjim/nui.nvim"</span><span class="p">,</span>
-<span class="w">  </span><span class="p">{</span>
-<span class="w">      </span><span class="nv">src</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'https://github.com/s1n7ax/nvim-window-picker'</span><span class="p">,</span><span class="w"> </span>
-<span class="w">      </span><span class="nv">version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">vim</span><span class="p">.</span><span class="py">version</span><span class="p">.</span><span class="nf">range</span><span class="p">(</span><span class="s1">'2.*'</span><span class="p">)</span><span class="w"> </span>
-<span class="w">  </span><span class="p">},</span>
-<span class="p">})</span>
-
-<span class="nb">require</span><span class="w"> </span><span class="s1">'window-picker'</span><span class="p">.</span><span class="nf">setup</span><span class="p">({</span>
-<span class="w">    </span><span class="nv">hint</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'statusline-winbar'</span><span class="p">,</span>
-<span class="w">    </span><span class="nv">selection_chars</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'ABCDEFGHIJKLMNOP'</span><span class="p">,</span>
-<span class="w">    </span><span class="nv">highlights</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="nv">enabled</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
-<span class="w">        </span><span class="nv">statusline</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="nv">unfocused</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="nv">fg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'#f38ba8'</span><span class="p">,</span>
-<span class="w">                </span><span class="nv">bg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'NONE'</span><span class="p">,</span>
-<span class="w">                </span><span class="nv">bold</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
-<span class="w">            </span><span class="p">},</span>
-<span class="w">        </span><span class="p">},</span>
-<span class="w">        </span><span class="nv">winbar</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="nv">unfocused</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="nv">fg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'#f38ba8'</span><span class="p">,</span>
-<span class="w">                </span><span class="nv">bg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'NONE'</span><span class="p">,</span>
-<span class="w">                </span><span class="nv">bold</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
-<span class="w">            </span><span class="p">},</span>
-<span class="w">        </span><span class="p">},</span>
-<span class="w">    </span><span class="p">},</span>
-<span class="p">})</span>
-
-<span class="nb">require</span><span class="p">(</span><span class="s2">"neo-tree"</span><span class="p">).</span><span class="nf">setup</span><span class="p">({</span>
-<span class="w">  </span><span class="nv">window</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nv">mappings</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-<span class="w">      </span><span class="p">[</span><span class="s2">"&lt;cr&gt;"</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"open_with_window_picker"</span><span class="p">,</span>
-<span class="w">      </span><span class="p">[</span><span class="s2">"&lt;2-LeftMouse&gt;"</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"open_with_window_picker"</span><span class="p">,</span>
-<span class="w">      </span><span class="p">[</span><span class="s2">"s"</span><span class="p">]</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="s2">"split_with_window_picker"</span><span class="p">,</span>
-<span class="w">      </span><span class="p">[</span><span class="s2">"v"</span><span class="p">]</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="s2">"vsplit_with_window_picker"</span><span class="p">,</span>
-<span class="w">      </span><span class="p">[</span><span class="s2">"S"</span><span class="p">]</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="s2">"noop"</span><span class="p">,</span>
-<span class="w">      </span><span class="p">[</span><span class="s2">"w"</span><span class="p">]</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="s2">"noop"</span><span class="p">,</span>
-<span class="w">    </span><span class="p">},</span>
-<span class="w">  </span><span class="p">},</span>
-<span class="p">})</span>
-
-<span class="kd">local</span><span class="w"> </span><span class="nv">opts</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kr">function</span><span class="p">(</span><span class="nv">desc</span><span class="p">)</span>
-<span class="w">            </span><span class="kr">return</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nv">desc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"Neotree: "</span><span class="w"> </span><span class="o">..</span><span class="w"> </span><span class="nv">desc</span><span class="w"> </span><span class="p">}</span>
-<span class="w">        </span><span class="kr">end</span>
-<span class="kd">local</span><span class="w"> </span><span class="nv">map</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">vim</span><span class="p">.</span><span class="py">keymap</span><span class="p">.</span><span class="py">set</span>
-
-<span class="nf">map</span><span class="p">(</span><span class="s2">"n"</span><span class="p">,</span><span class="w"> </span><span class="s2">"&lt;C-n&gt;"</span><span class="p">,</span><span class="w"> </span><span class="s2">"&lt;cmd&gt;Neotree toggle reveal=true&lt;cr&gt;"</span><span class="p">,</span><span class="w"> </span><span class="nf">opts</span><span class="p">(</span><span class="s2">"Toggle Explorer"</span><span class="p">))</span>
-<span class="nf">map</span><span class="p">(</span><span class="s2">"n"</span><span class="p">,</span><span class="w"> </span><span class="s2">"&lt;leader&gt;e"</span><span class="p">,</span><span class="w"> </span><span class="s2">"&lt;cmd&gt;Neotree focus"</span><span class="p">,</span><span class="w"> </span><span class="nf">opts</span><span class="p">(</span><span class="s2">"Focus Explorer"</span><span class="p">))</span>
-<span class="nf">map</span><span class="p">(</span><span class="s2">"n"</span><span class="p">,</span><span class="w"> </span><span class="s2">"&lt;leader&gt;b"</span><span class="p">,</span><span class="w"> </span><span class="s2">"&lt;cmd&gt;Neotree focus source=buffers&lt;cr&gt;"</span><span class="p">,</span><span class="w"> </span><span class="nf">opts</span><span class="p">(</span><span class="s2">"Focus Buffers"</span><span class="p">))</span>
-</code></pre></div></p>
-<h3 id="treesitter-better-highlighting-and-parsers">Treesitter: Better Highlighting and Parsers</h3>
-<p>Neovim 0.12+ now bundles a couple languages for highlights, but it's not enough. Since <a href="https://github.com/nvim-treesitter/nvim-treesitter"><code>nvim-treesitter</code></a> is now archived, I installed <a href="https://github.com/romus204/tree-sitter-manager.nvim"><code>tree-sitter-manager</code></a> and installed a couple languages like <code>c</code>, <code>cpp</code>, <code>latex</code>, <code>lua</code> and <code>python</code>.<br />
-<div class="highlight"><pre><span></span><code><span class="nv">vim</span><span class="p">.</span><span class="py">pack</span><span class="p">.</span><span class="py">add</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="s2">"https://github.com/romus204/tree-sitter-manager.nvim"</span>
-<span class="p">}</span>
-
-<span class="nb">require</span><span class="p">(</span><span class="s2">"tree-sitter-manager"</span><span class="p">).</span><span class="nf">setup</span><span class="p">()</span>
-</code></pre></div></p>
-<h3 id="conform-a-formatter">Conform: A Formatter</h3>
-<p>I decided to use <a href="https://github.com/stevearc/conform.nvim"><code>conform</code></a> to invoke formatters in my code and set their settings. I started by configuring <code>stylua</code> to then format my config files correctly and thus test if everything works.<br />
-<div class="highlight"><pre><span></span><code><span class="nv">vim</span><span class="p">.</span><span class="py">pack</span><span class="p">.</span><span class="nf">add</span><span class="p">({</span>
-<span class="w">    </span><span class="s2">"https://github.com/stevearc/conform.nvim"</span><span class="p">,</span>
-<span class="p">})</span>
-
-<span class="nb">require</span><span class="p">(</span><span class="s2">"conform"</span><span class="p">).</span><span class="nf">setup</span><span class="p">({</span>
-<span class="w">    </span><span class="nv">formatters_by_ft</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="nv">lua</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="s2">"stylua"</span><span class="w"> </span><span class="p">},</span>
-<span class="w">    </span><span class="p">},</span>
-<span class="w">    </span><span class="nv">default_format_opts</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="nv">lsp_format</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"fallback"</span><span class="p">,</span>
-<span class="w">    </span><span class="p">},</span>
-<span class="w">    </span><span class="nv">formatters</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="nv">stylua</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="nv">prepend_args</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="s2">"--indent-type"</span><span class="p">,</span><span class="w"> </span><span class="s2">"Spaces"</span><span class="w"> </span><span class="p">},</span>
-<span class="w">        </span><span class="p">},</span>
-<span class="w">    </span><span class="p">},</span>
-<span class="p">})</span>
-
-<span class="nv">vim</span><span class="p">.</span><span class="py">keymap</span><span class="p">.</span><span class="nf">set</span><span class="p">(</span><span class="s2">"n"</span><span class="p">,</span><span class="w"> </span><span class="s2">"&lt;leader&gt;fm"</span><span class="p">,</span><span class="w"> </span><span class="kr">function</span><span class="p">()</span>
-<span class="w">    </span><span class="nb">require</span><span class="p">(</span><span class="s2">"conform"</span><span class="p">).</span><span class="nf">format</span><span class="p">()</span>
-<span class="kr">end</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nv">desc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"Format file"</span><span class="w"> </span><span class="p">})</span>
-</code></pre></div></p>
-<div class="admonition tip">
-<p class="admonition-title">Installing tools</p>
-<p>I mentioned I wanted to get away from <code>mason</code> to install tools like LSPs and formatters. I landed on <a href="https://mise.jdx.dev/"><code>mise</code></a> to install the tools I need on my system and get them in the <code>$PATH</code> so that Neovim can find them. It works just like using <code>npm</code> or <code>pip</code>, but with the recent security track record of the former, I did not want to install my tools with it.</p>
-<p>You can install tools like <code>stylua</code> with <code>mise use -g stylua</code> and <code>lua_ls</code> with <code>muse use -g lua-language-server</code>.</p>
-</div>
-<h3 id="lsps">LSPs</h3>
-<p>Neovim's native lsp is powerful, but I still like to have default configs since they are not yet in nvim. So I installed <a href="https://github.com/neovim/nvim-lspconfig"><code>nvim-lsp-config</code></a> for defaults that I can extend.</p>
-<p>I also decided to change the keymaps for something more intuitive to me, like goto definition (<code>gd</code>), or code actions (<code>ca</code>) or rename (<code>rn</code>) like it was used in NvChad.</p>
-<p>Then, I enabled the LSPs I wanted after having installed them with either <code>mise</code>, <code>pip</code> or <code>dnf</code>. I decided to let <code>pylsp</code> manage the linters and formatters since it seemed to simpler to let them work together as intended by the devs, as opposed to C where I'll add <code>clang-format</code> and <code>clang-tidy</code>. Later I'll add <code>ltex_plus</code> to edit Latex files.</p>
-<p>I also added virtual lines to show error diagnostic under the errors. We'll see if I keep it or if it is too cluttering.</p>
-<p>Finally, I added <a href="https://github.com/Crysthamus/nvim-file-operations"><code>nvim-file-operations</code></a> to implement the events emitted by the file manager so that server that can will update import statements and paths.<br />
-<div class="highlight"><pre><span></span><code><span class="nv">vim</span><span class="p">.</span><span class="py">pack</span><span class="p">.</span><span class="nf">add</span><span class="p">({</span>
-<span class="w">    </span><span class="s2">"https://github.com/neovim/nvim-lspconfig"</span><span class="p">,</span>
-<span class="p">})</span>
-
-<span class="kd">local</span><span class="w"> </span><span class="nv">map</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">vim</span><span class="p">.</span><span class="py">keymap</span><span class="p">.</span><span class="py">set</span>
-
-<span class="nv">vim</span><span class="p">.</span><span class="py">api</span><span class="p">.</span><span class="nf">nvim_create_autocmd</span><span class="p">(</span><span class="s2">"LspAttach"</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nv">callback</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kr">function</span><span class="p">(</span><span class="nv">args</span><span class="p">)</span>
-<span class="w">        </span><span class="kd">local</span><span class="w"> </span><span class="nv">opts</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kr">function</span><span class="p">(</span><span class="nv">desc</span><span class="p">)</span>
-<span class="w">            </span><span class="kr">return</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nv">buffer</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">args</span><span class="p">.</span><span class="py">buf</span><span class="p">,</span><span class="w"> </span><span class="nv">desc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"LSP: "</span><span class="w"> </span><span class="o">..</span><span class="w"> </span><span class="nv">desc</span><span class="w"> </span><span class="p">}</span>
-<span class="w">        </span><span class="kr">end</span>
-
-<span class="w">        </span><span class="c1">-- Navigation</span>
-<span class="w">        </span><span class="nf">map</span><span class="p">(</span><span class="s2">"n"</span><span class="p">,</span><span class="w"> </span><span class="s2">"gd"</span><span class="p">,</span><span class="w"> </span><span class="nv">vim</span><span class="p">.</span><span class="py">lsp</span><span class="p">.</span><span class="py">buf</span><span class="p">.</span><span class="py">definition</span><span class="p">,</span><span class="w"> </span><span class="nf">opts</span><span class="p">(</span><span class="s2">"Go to Definition"</span><span class="p">))</span>
-<span class="w">        </span><span class="nf">map</span><span class="p">(</span><span class="s2">"n"</span><span class="p">,</span><span class="w"> </span><span class="s2">"gD"</span><span class="p">,</span><span class="w"> </span><span class="nv">vim</span><span class="p">.</span><span class="py">lsp</span><span class="p">.</span><span class="py">buf</span><span class="p">.</span><span class="py">declaration</span><span class="p">,</span><span class="w"> </span><span class="nf">opts</span><span class="p">(</span><span class="s2">"Go to Declaration"</span><span class="p">))</span>
-<span class="w">        </span><span class="nf">map</span><span class="p">(</span><span class="s2">"n"</span><span class="p">,</span><span class="w"> </span><span class="s2">"gi"</span><span class="p">,</span><span class="w"> </span><span class="nv">vim</span><span class="p">.</span><span class="py">lsp</span><span class="p">.</span><span class="py">buf</span><span class="p">.</span><span class="py">implementation</span><span class="p">,</span><span class="w"> </span><span class="nf">opts</span><span class="p">(</span><span class="s2">"Go to Implementation"</span><span class="p">))</span>
-<span class="w">        </span><span class="nf">map</span><span class="p">(</span><span class="s2">"n"</span><span class="p">,</span><span class="w"> </span><span class="s2">"gr"</span><span class="p">,</span><span class="w"> </span><span class="nv">vim</span><span class="p">.</span><span class="py">lsp</span><span class="p">.</span><span class="py">buf</span><span class="p">.</span><span class="py">references</span><span class="p">,</span><span class="w"> </span><span class="nf">opts</span><span class="p">(</span><span class="s2">"Go to References"</span><span class="p">))</span>
-
-<span class="w">        </span><span class="c1">-- Actions</span>
-<span class="w">        </span><span class="nf">map</span><span class="p">(</span><span class="s2">"n"</span><span class="p">,</span><span class="w"> </span><span class="s2">"&lt;leader&gt;rn"</span><span class="p">,</span><span class="w"> </span><span class="nv">vim</span><span class="p">.</span><span class="py">lsp</span><span class="p">.</span><span class="py">buf</span><span class="p">.</span><span class="py">rename</span><span class="p">,</span><span class="w"> </span><span class="nf">opts</span><span class="p">(</span><span class="s2">"Rename"</span><span class="p">))</span>
-<span class="w">        </span><span class="nf">map</span><span class="p">({</span><span class="w"> </span><span class="s2">"n"</span><span class="p">,</span><span class="w"> </span><span class="s2">"v"</span><span class="w"> </span><span class="p">},</span><span class="w"> </span><span class="s2">"&lt;leader&gt;ca"</span><span class="p">,</span><span class="w"> </span><span class="nv">vim</span><span class="p">.</span><span class="py">lsp</span><span class="p">.</span><span class="py">buf</span><span class="p">.</span><span class="py">code_action</span><span class="p">,</span><span class="w"> </span><span class="nf">opts</span><span class="p">(</span><span class="s2">"Code Action"</span><span class="p">))</span>
-
-<span class="w">        </span><span class="c1">-- Diagnostics</span>
-<span class="w">        </span><span class="nf">map</span><span class="p">(</span><span class="s2">"n"</span><span class="p">,</span><span class="w"> </span><span class="s2">"&lt;leader&gt;df"</span><span class="p">,</span><span class="w"> </span><span class="nv">vim</span><span class="p">.</span><span class="py">diagnostic</span><span class="p">.</span><span class="py">open_float</span><span class="p">,</span><span class="w"> </span><span class="nf">opts</span><span class="p">(</span><span class="s2">"Show Diagnostic"</span><span class="p">))</span>
-<span class="w">        </span><span class="nf">map</span><span class="p">(</span><span class="s2">"n"</span><span class="p">,</span><span class="w"> </span><span class="s2">"&lt;leader&gt;dn"</span><span class="p">,</span><span class="w"> </span><span class="kr">function</span><span class="p">()</span>
-<span class="w">            </span><span class="nv">vim</span><span class="p">.</span><span class="py">diagnostic</span><span class="p">.</span><span class="nf">jump</span><span class="p">({</span><span class="w"> </span><span class="nv">count</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="nv">float</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span><span class="w"> </span><span class="p">})</span>
-<span class="w">        </span><span class="kr">end</span><span class="p">,</span><span class="w"> </span><span class="nf">opts</span><span class="p">(</span><span class="s2">"Next Diagnostic"</span><span class="p">))</span>
-<span class="w">        </span><span class="nf">map</span><span class="p">(</span><span class="s2">"n"</span><span class="p">,</span><span class="w"> </span><span class="s2">"&lt;leader&gt;dp"</span><span class="p">,</span><span class="w"> </span><span class="kr">function</span><span class="p">()</span>
-<span class="w">            </span><span class="nv">vim</span><span class="p">.</span><span class="py">diagnostic</span><span class="p">.</span><span class="nf">jump</span><span class="p">({</span><span class="w"> </span><span class="nv">count</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="nv">float</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span><span class="w"> </span><span class="p">})</span>
-<span class="w">        </span><span class="kr">end</span><span class="p">,</span><span class="w"> </span><span class="nf">opts</span><span class="p">(</span><span class="s2">"Previous Diagnostic"</span><span class="p">))</span>
-<span class="w">        </span><span class="nf">map</span><span class="p">(</span><span class="s2">"n"</span><span class="p">,</span><span class="w"> </span><span class="s2">"&lt;leader&gt;dl"</span><span class="p">,</span><span class="w"> </span><span class="nv">vim</span><span class="p">.</span><span class="py">diagnostic</span><span class="p">.</span><span class="py">setloclist</span><span class="p">,</span><span class="w"> </span><span class="nf">opts</span><span class="p">(</span><span class="s2">"Diagnostics List"</span><span class="p">))</span>
-<span class="w">    </span><span class="kr">end</span><span class="p">,</span>
-<span class="p">})</span>
-
-<span class="kd">local</span><span class="w"> </span><span class="nv">lsp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">vim</span><span class="p">.</span><span class="py">lsp</span>
-
-<span class="nv">lsp</span><span class="p">.</span><span class="nf">config</span><span class="p">(</span><span class="s2">"lua_ls"</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nv">settings</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="nv">Lua</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nv">diagnostics</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nv">globals</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="s2">"vim"</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">},</span>
-<span class="w">    </span><span class="p">},</span>
-<span class="p">})</span>
-
-<span class="nv">vim</span><span class="p">.</span><span class="py">lsp</span><span class="p">.</span><span class="nf">config</span><span class="p">(</span><span class="s2">"clangd"</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nv">cmd</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="s2">"clangd"</span><span class="p">,</span><span class="w"> </span><span class="s2">"--enable-config"</span><span class="w"> </span><span class="p">},</span>
-<span class="p">})</span>
-
-<span class="c1">-- pylsp comes with linter and formatter, so simpler to set here together</span>
-<span class="nv">vim</span><span class="p">.</span><span class="py">lsp</span><span class="p">.</span><span class="nf">config</span><span class="p">(</span><span class="s2">"pylsp"</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nv">settings</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="nv">pylsp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="nv">plugins</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="nv">pycodestyle</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                    </span><span class="nv">ignore</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="s2">"E203"</span><span class="w"> </span><span class="p">},</span>
-<span class="w">                    </span><span class="nv">maxLineLength</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">88</span><span class="p">,</span><span class="w"> </span><span class="c1">-- Black formatter</span>
-<span class="w">                </span><span class="p">},</span>
-<span class="w">                </span><span class="nv">black</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nv">enabled</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span><span class="w"> </span><span class="p">},</span>
-<span class="w">            </span><span class="p">},</span>
-<span class="w">        </span><span class="p">},</span>
-<span class="w">    </span><span class="p">},</span>
-<span class="p">})</span>
-
-<span class="nv">lsp</span><span class="p">.</span><span class="nf">enable</span><span class="p">({</span><span class="w"> </span><span class="s2">"lua_ls"</span><span class="p">,</span><span class="w"> </span><span class="s2">"clangd"</span><span class="p">,</span><span class="w"> </span><span class="s2">"pylsp"</span><span class="w"> </span><span class="p">})</span>
-
-<span class="nv">vim</span><span class="p">.</span><span class="py">diagnostic</span><span class="p">.</span><span class="nf">config</span><span class="p">({</span>
-<span class="w">    </span><span class="nv">virtual_lines</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="nv">format</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kr">function</span><span class="p">(</span><span class="nv">diagnostic</span><span class="p">)</span>
-<span class="w">            </span><span class="c1">-- Only show the message, hide the code</span>
-<span class="w">            </span><span class="kr">return</span><span class="w"> </span><span class="nv">diagnostic</span><span class="p">.</span><span class="py">message</span>
-<span class="w">        </span><span class="kr">end</span><span class="p">,</span>
-<span class="w">    </span><span class="p">},</span>
-<span class="p">})</span>
-
-<span class="nb">require</span><span class="p">(</span><span class="s2">"nvim-file-operations"</span><span class="p">).</span><span class="nf">setup</span><span class="p">()</span>
-<span class="nv">vim</span><span class="p">.</span><span class="py">lsp</span><span class="p">.</span><span class="nf">config</span><span class="p">(</span><span class="s2">"*"</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nv">capabilities</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">require</span><span class="p">(</span><span class="s2">"nvim-file-operations.config"</span><span class="p">).</span><span class="nf">default_capabilities</span><span class="p">(),</span>
-<span class="p">})</span>
-</code></pre></div></p>
-<h3 id="fzf-lua-a-file-picker">Fzf-Lua: A File Picker</h3>
-<p>I installed <a href="https://github.com/ibhagwan/fzf-lua"><code>fzf-lua</code></a> instead of Telescope for the speed. I then set it up with the commands I used the most in NvChad, namely finding files, finding in all files starting from home, finding recent files and <code>live_grep</code> to find words in files in the project.<br />
-<div class="highlight"><pre><span></span><code><span class="nv">vim</span><span class="p">.</span><span class="py">pack</span><span class="p">.</span><span class="nf">add</span><span class="p">({</span><span class="w"> </span><span class="s2">"https://github.com/ibhagwan/fzf-lua"</span><span class="w"> </span><span class="p">})</span>
-
-<span class="kd">local</span><span class="w"> </span><span class="nv">fzf</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">require</span><span class="p">(</span><span class="s2">"fzf-lua"</span><span class="p">)</span>
-<span class="nv">fzf</span><span class="p">.</span><span class="nf">setup</span><span class="p">({})</span>
-
-<span class="kd">local</span><span class="w"> </span><span class="nv">opts</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kr">function</span><span class="p">(</span><span class="nv">desc</span><span class="p">)</span>
-<span class="w">    </span><span class="kr">return</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nv">desc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"FZF: "</span><span class="w"> </span><span class="o">..</span><span class="w"> </span><span class="nv">desc</span><span class="w"> </span><span class="p">}</span>
-<span class="kr">end</span>
-
-<span class="kd">local</span><span class="w"> </span><span class="nv">map</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">vim</span><span class="p">.</span><span class="py">keymap</span><span class="p">.</span><span class="py">set</span>
-<span class="nf">map</span><span class="p">(</span><span class="s2">"n"</span><span class="p">,</span><span class="w"> </span><span class="s2">"&lt;leader&gt;ff"</span><span class="p">,</span><span class="w"> </span><span class="nv">fzf</span><span class="p">.</span><span class="py">files</span><span class="p">,</span><span class="w"> </span><span class="nf">opts</span><span class="p">(</span><span class="s2">"Find files"</span><span class="p">))</span>
-<span class="nf">map</span><span class="p">(</span><span class="s2">"n"</span><span class="p">,</span><span class="w"> </span><span class="s2">"&lt;leader&gt;fa"</span><span class="p">,</span><span class="w"> </span><span class="kr">function</span><span class="p">()</span>
-<span class="w">    </span><span class="nv">fzf</span><span class="p">.</span><span class="nf">files</span><span class="p">({</span><span class="w"> </span><span class="nv">cwd</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"~"</span><span class="w"> </span><span class="p">})</span>
-<span class="kr">end</span><span class="p">,</span><span class="w"> </span><span class="nf">opts</span><span class="p">(</span><span class="s2">"Find all files"</span><span class="p">))</span>
-<span class="nf">map</span><span class="p">(</span><span class="s2">"n"</span><span class="p">,</span><span class="w"> </span><span class="s2">"&lt;leader&gt;fo"</span><span class="p">,</span><span class="w"> </span><span class="nv">fzf</span><span class="p">.</span><span class="py">oldfiles</span><span class="p">,</span><span class="w"> </span><span class="nf">opts</span><span class="p">(</span><span class="s2">"Find recent files"</span><span class="p">))</span>
-<span class="nf">map</span><span class="p">(</span><span class="s2">"n"</span><span class="p">,</span><span class="w"> </span><span class="s2">"&lt;leader&gt;fw"</span><span class="p">,</span><span class="w"> </span><span class="nv">fzf</span><span class="p">.</span><span class="py">live_grep</span><span class="p">,</span><span class="w"> </span><span class="nf">opts</span><span class="p">(</span><span class="s2">"Live grep"</span><span class="p">))</span>
-<span class="nf">map</span><span class="p">(</span><span class="s2">"n"</span><span class="p">,</span><span class="w"> </span><span class="s2">"&lt;leader&gt;fk"</span><span class="p">,</span><span class="w"> </span><span class="nv">fzf</span><span class="p">.</span><span class="py">keymaps</span><span class="p">,</span><span class="w"> </span><span class="nf">opts</span><span class="p">(</span><span class="s2">"Find keymaps"</span><span class="p">))</span>
-<span class="nf">map</span><span class="p">(</span><span class="s2">"n"</span><span class="p">,</span><span class="w"> </span><span class="s2">"&lt;leader&gt;fb"</span><span class="p">,</span><span class="w"> </span><span class="nv">fzf</span><span class="p">.</span><span class="py">buffers</span><span class="p">,</span><span class="w"> </span><span class="nf">opts</span><span class="p">(</span><span class="s2">"Find buffers"</span><span class="p">))</span>
-</code></pre></div></p>
-<h3 id="blink-autocompletion">Blink: Autocompletion</h3>
-<p>I used <a href="https://github.com/Saghen/blink.cmp"><code>blink</code></a>, the newer, faster completion plugin, to have completion and snippets sourced from LSPs. I modified a bit the keymaps to my liking using enter to accept a completion and tab to move inside the list. Finally, I added the capabilities of blink to the LSPs.<br />
-<div class="highlight"><pre><span></span><code><span class="nv">vim</span><span class="p">.</span><span class="py">pack</span><span class="p">.</span><span class="nf">add</span><span class="p">({</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nv">src</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"https://github.com/Saghen/blink.cmp"</span><span class="p">,</span><span class="w"> </span><span class="nv">version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"v1"</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">})</span>
-
-<span class="kd">local</span><span class="w"> </span><span class="nv">blink</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">require</span><span class="p">(</span><span class="s2">"blink.cmp"</span><span class="p">)</span>
-<span class="nv">blink</span><span class="p">.</span><span class="nf">setup</span><span class="p">({</span>
-<span class="w">    </span><span class="nv">keymap</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="nv">preset</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"enter"</span><span class="p">,</span>
-
-<span class="w">        </span><span class="p">[</span><span class="s2">"&lt;Tab&gt;"</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="s2">"select_next"</span><span class="p">,</span><span class="w"> </span><span class="s2">"snippet_forward"</span><span class="p">,</span><span class="w"> </span><span class="s2">"fallback"</span><span class="w"> </span><span class="p">},</span>
-<span class="w">        </span><span class="p">[</span><span class="s2">"&lt;S-Tab&gt;"</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="s2">"select_prev"</span><span class="p">,</span><span class="w"> </span><span class="s2">"snippet_backward"</span><span class="p">,</span><span class="w"> </span><span class="s2">"fallback"</span><span class="w"> </span><span class="p">},</span>
-
-<span class="w">        </span><span class="p">[</span><span class="s2">"&lt;Up&gt;"</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
-<span class="w">        </span><span class="p">[</span><span class="s2">"&lt;Down&gt;"</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
-<span class="w">        </span><span class="p">[</span><span class="s2">"&lt;C-p&gt;"</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
-<span class="w">        </span><span class="p">[</span><span class="s2">"&lt;C-n&gt;"</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
-<span class="w">    </span><span class="p">},</span>
-<span class="w">    </span><span class="nv">completion</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="nv">list</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="nv">selection</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nv">preselect</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w"> </span><span class="nv">auto_insert</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span><span class="w"> </span><span class="p">},</span>
-<span class="w">        </span><span class="p">},</span>
-<span class="w">    </span><span class="p">},</span>
-<span class="p">})</span>
-
-<span class="nv">vim</span><span class="p">.</span><span class="py">lsp</span><span class="p">.</span><span class="nf">config</span><span class="p">(</span><span class="s2">"*"</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="nv">capabilities</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">blink</span><span class="p">.</span><span class="nf">get_lsp_capabilities</span><span class="p">(),</span>
-<span class="p">})</span>
-</code></pre></div></p>
-<h3 id="quality-of-life">Quality of Life</h3>
-<p>For now, I added <a href="https://github.com/folke/which-key.nvim"><code>which-key</code></a> as a bonus on top of the keymaps listing of <code>fzf-lua</code> to help me if I forget a combination. I then added <a href="https://github.com/windwp/nvim-autopairs"><code>nvim-autopairs</code></a> to automatically close brackets and parentheses.<br />
-<div class="highlight"><pre><span></span><code><span class="nv">vim</span><span class="p">.</span><span class="py">pack</span><span class="p">.</span><span class="nf">add</span><span class="p">({</span>
-<span class="w">    </span><span class="s2">"https://github.com/folke/which-key.nvim"</span><span class="p">,</span>
-<span class="w">    </span><span class="s2">"https://github.com/windwp/nvim-autopairs"</span><span class="p">,</span>
-<span class="p">})</span>
-
-<span class="nb">require</span><span class="p">(</span><span class="s2">"which-key"</span><span class="p">).</span><span class="nf">setup</span><span class="p">({</span><span class="w"> </span><span class="nv">preset</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"helix"</span><span class="w"> </span><span class="p">})</span>
-<span class="nb">require</span><span class="p">(</span><span class="s2">"nvim-autopairs"</span><span class="p">).</span><span class="nf">setup</span><span class="p">({})</span>
-</code></pre></div></p>
-<h3 id="git-client">Git Client</h3>
-<p>I added <a href="https://github.com/lewis6991/gitsigns.nvim"><code>gitsigns</code></a> to show lines that have been changes in the buffers and added the <a href="https://github.com/kdheepak/lazygit.nvim"><code>lazygit</code> nvim plugin</a> to toggle a floating Lazygit terminal. I'm already used to Lazygit, but this plugins makes it so I can 1) use it in the same window and 2) open the files in conflicts inside the same Neovim instance.<br />
-<div class="highlight"><pre><span></span><code><span class="nv">vim</span><span class="p">.</span><span class="py">pack</span><span class="p">.</span><span class="nf">add</span><span class="p">({</span>
-<span class="w">    </span><span class="s2">"https://github.com/lewis6991/gitsigns.nvim"</span><span class="p">,</span>
-<span class="w">    </span><span class="s2">"https://github.com/kdheepak/lazygit.nvim"</span><span class="p">,</span>
-<span class="p">})</span>
-
-<span class="nv">vim</span><span class="p">.</span><span class="py">keymap</span><span class="p">.</span><span class="nf">set</span><span class="p">(</span><span class="s2">"n"</span><span class="p">,</span><span class="w"> </span><span class="s2">"&lt;leader&gt;g"</span><span class="p">,</span><span class="w"> </span><span class="s2">"&lt;cmd&gt;LazyGit&lt;cr&gt;"</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nv">desc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"Open Lazygit"</span><span class="w"> </span><span class="p">})</span>
-</code></pre></div></p>
-<h3 id="keymaps">Keymaps</h3>
-<p>Finally, here are some general keymaps I like. They are taken directly from NvChad.<br />
-<div class="highlight"><pre><span></span><code><span class="kd">local</span><span class="w"> </span><span class="nv">map</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">vim</span><span class="p">.</span><span class="py">keymap</span><span class="p">.</span><span class="py">set</span>
-
-<span class="nf">map</span><span class="p">(</span><span class="s2">"n"</span><span class="p">,</span><span class="w"> </span><span class="s2">"&lt;Esc&gt;"</span><span class="p">,</span><span class="w"> </span><span class="s2">"&lt;cmd&gt;noh&lt;CR&gt;"</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nv">silent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w"> </span><span class="nv">desc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"Clear highlights"</span><span class="w"> </span><span class="p">})</span>
-
-<span class="c1">-- Moving in insert mode</span>
-<span class="nf">map</span><span class="p">(</span><span class="s2">"i"</span><span class="p">,</span><span class="w"> </span><span class="s2">"&lt;C-b&gt;"</span><span class="p">,</span><span class="w"> </span><span class="s2">"&lt;ESC&gt;^i"</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nv">desc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"Move beginning of line"</span><span class="w"> </span><span class="p">})</span>
-<span class="nf">map</span><span class="p">(</span><span class="s2">"i"</span><span class="p">,</span><span class="w"> </span><span class="s2">"&lt;C-e&gt;"</span><span class="p">,</span><span class="w"> </span><span class="s2">"&lt;End&gt;"</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nv">desc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"Move end of line"</span><span class="w"> </span><span class="p">})</span>
-<span class="nf">map</span><span class="p">(</span><span class="s2">"i"</span><span class="p">,</span><span class="w"> </span><span class="s2">"&lt;C-h&gt;"</span><span class="p">,</span><span class="w"> </span><span class="s2">"&lt;Left&gt;"</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nv">desc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"Move left"</span><span class="w"> </span><span class="p">})</span>
-<span class="nf">map</span><span class="p">(</span><span class="s2">"i"</span><span class="p">,</span><span class="w"> </span><span class="s2">"&lt;C-l&gt;"</span><span class="p">,</span><span class="w"> </span><span class="s2">"&lt;Right&gt;"</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nv">desc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"Move right"</span><span class="w"> </span><span class="p">})</span>
-<span class="nf">map</span><span class="p">(</span><span class="s2">"i"</span><span class="p">,</span><span class="w"> </span><span class="s2">"&lt;C-j&gt;"</span><span class="p">,</span><span class="w"> </span><span class="s2">"&lt;Down&gt;"</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nv">desc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"Move down"</span><span class="w"> </span><span class="p">})</span>
-<span class="nf">map</span><span class="p">(</span><span class="s2">"i"</span><span class="p">,</span><span class="w"> </span><span class="s2">"&lt;C-k&gt;"</span><span class="p">,</span><span class="w"> </span><span class="s2">"&lt;Up&gt;"</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nv">desc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"Move up"</span><span class="w"> </span><span class="p">})</span>
-
-<span class="c1">-- Moving in panes</span>
-<span class="nf">map</span><span class="p">(</span><span class="s2">"n"</span><span class="p">,</span><span class="w"> </span><span class="s2">"&lt;C-h&gt;"</span><span class="p">,</span><span class="w"> </span><span class="s2">"&lt;C-w&gt;h"</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nv">desc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"Switch pane left"</span><span class="w"> </span><span class="p">})</span>
-<span class="nf">map</span><span class="p">(</span><span class="s2">"n"</span><span class="p">,</span><span class="w"> </span><span class="s2">"&lt;C-l&gt;"</span><span class="p">,</span><span class="w"> </span><span class="s2">"&lt;C-w&gt;l"</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nv">desc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"Switch pane right"</span><span class="w"> </span><span class="p">})</span>
-<span class="nf">map</span><span class="p">(</span><span class="s2">"n"</span><span class="p">,</span><span class="w"> </span><span class="s2">"&lt;C-j&gt;"</span><span class="p">,</span><span class="w"> </span><span class="s2">"&lt;C-w&gt;j"</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nv">desc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"Switch pane down"</span><span class="w"> </span><span class="p">})</span>
-<span class="nf">map</span><span class="p">(</span><span class="s2">"n"</span><span class="p">,</span><span class="w"> </span><span class="s2">"&lt;C-k&gt;"</span><span class="p">,</span><span class="w"> </span><span class="s2">"&lt;C-w&gt;k"</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nv">desc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"Switch pane up"</span><span class="w"> </span><span class="p">})</span>
-
-<span class="c1">-- Comments</span>
-<span class="nf">map</span><span class="p">(</span><span class="s2">"n"</span><span class="p">,</span><span class="w"> </span><span class="s2">"&lt;leader&gt;/"</span><span class="p">,</span><span class="w"> </span><span class="s2">"gcc"</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nv">desc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"toggle comment"</span><span class="p">,</span><span class="w"> </span><span class="nv">remap</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span><span class="w"> </span><span class="p">})</span>
-<span class="nf">map</span><span class="p">(</span><span class="s2">"v"</span><span class="p">,</span><span class="w"> </span><span class="s2">"&lt;leader&gt;/"</span><span class="p">,</span><span class="w"> </span><span class="s2">"gc"</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nv">desc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"toggle comment"</span><span class="p">,</span><span class="w"> </span><span class="nv">remap</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span><span class="w"> </span><span class="p">})</span>
-</code></pre></div></p>
-<h2 id="conclusion">Conclusion</h2>
-<hr />
-<p>This rewrite of my config allowed me to have a clean and minimal configuration of my Neovim and learn a bit more about the new features of the 0.12+ version. Everything else I'll add will be in my dotfiles but not detailed here, things like vimtex and other plugins I land on in my researchs.</p>
-
-
-
-
-
-
-
-
-
-
-
-
-                
-              </article>
-            </div>
-          
-          
-<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
-        </div>
-        
-      </main>
-      
-        <footer class="md-footer">
-  
-  <div class="md-footer-meta md-typeset">
-    <div class="md-footer-meta__inner md-grid">
-      <div class="md-copyright">
-  
-  
-    Made with
-    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
-      Material for MkDocs
-    </a>
-  
-</div>
-      
-    </div>
-  </div>
-</footer>
-      
-    </div>
-    <div class="md-dialog" data-md-component="dialog">
-      <div class="md-dialog__inner md-typeset"></div>
-    </div>
-    
-    
-    
-      
-      
-      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
-    
-    
-      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
-      
-        <script src="../../javascripts/mathjax.js"></script>
-      
-        <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-      
-        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-      
-    
-  </body>
-</html>
+<!doctype html><html lang=en-us><head><meta charset=utf-8><meta http-equiv=X-UA-Compatible content="IE=edge,chrome=1"><meta name=viewport content="width=device-width,initial-scale=1"><meta name=generator content="Hugo 0.169.0"><meta name=description content="This is my new hugo site"><meta name=keywords content="hugo,site,new"><meta name=author content="Jing Wang"><title>Moving from NvChad to Native Neovim 0.12 |
+Jérémy Dumas</title><link rel=stylesheet href=/css/index_86c9601.min.ee0736032cc5af7444c98284138cc774f81e2a617ef339020b0e691b8dc2761484e83ad7c449fdaa47d501ef0110274efb2f1e648f2311a48247c37b87d8a1f1.css integrity="sha512-7gc2AyzFr3REyYKEE4zHdPgeKmF+8zkCCw5pG43CdhSE6DrXxEn9qkfVAe8BECdO+y8eZI8jEaSCR8N7h9ih8Q=="></head><body><main><aside class=sidebar><div class=sidebar-inner><div class=tree-title>Tree Viewer</div><ul class=section-tree><li class="dir closed-dir"><span class="dir-text dir-toggle" aria-label="Toggle section"></span>
+<a class=dir-link href=/notes/>Notes</a><ul class=section-tree><li class="dir closed-dir"><span class="dir-text dir-toggle" aria-label="Toggle section"></span>
+<a class=dir-link href=/notes/systems/>Systems</a><ul class=section-tree><li class=file><a href=https://j-dumas.github.io/notes/systems/managing-cpp-cmake/ title=./notes/systems/managing-cpp-cmake/>Managing C++ Projects Using CMake</a></li></ul></li><li class="dir closed-dir"><span class="dir-text dir-toggle" aria-label="Toggle section"></span>
+<a class=dir-link href=/notes/zig/>Zig</a><ul class=section-tree><li class=file><a href=https://j-dumas.github.io/notes/zig/learning-zig/ title=./notes/zig/learning-zig/>Learning Zig</a></li></ul></li></ul></li><li class="dir opened-dir"><span class="dir-text dir-toggle" aria-label="Toggle section"></span>
+<a class=dir-link href=/projects/>Projects</a><ul class=section-tree><li class=file><a href=https://j-dumas.github.io/projects/nvchad-to-native-nvim/ title=./projects/nvchad-to-native-nvim/>Moving from NvChad to Native Neovim 0.12</a></li><li class=file><a href=https://j-dumas.github.io/projects/podman-devcontainers/ title=./projects/podman-devcontainers/>Podman Development Containers</a></li></ul></li></ul><div class=sidebar-outline><div class=outline-title>Table of Content</div><nav id=TableOfContents><ul><li><a href=#summary>Summary</a></li><li><a href=#the-config>The Config</a><ul><li><a href=#whats-needed>What&rsquo;s Needed?</a></li><li><a href=#a-clean-structure>A Clean Structure</a></li><li><a href=#common-options>Common Options</a></li><li><a href=#ui-colorscheme-and-statusline>UI: Colorscheme and Statusline</a></li><li><a href=#neotree-a-file-viewer>NeoTree: A File Viewer</a></li><li><a href=#treesitter-better-highlighting-and-parsers>Treesitter: Better Highlighting and Parsers</a></li><li><a href=#conform-a-formatter>Conform: A Formatter</a></li><li><a href=#lsps>LSPs</a></li><li><a href=#fzf-lua-a-file-picker>Fzf-Lua: A File Picker</a></li><li><a href=#blink-autocompletion>Blink: Autocompletion</a></li><li><a href=#quality-of-life>Quality of Life</a></li><li><a href=#git-client>Git Client</a></li><li><a href=#keymaps>Keymaps</a></li></ul></li></ul></nav></div></div></aside><aside class=exapandable></aside><script>(function(){const e="section-tree-state",t=document.querySelectorAll("aside.sidebar li.dir"),n=e=>e.querySelector(":scope > a.dir-link")?.getAttribute("href");let s={};try{s=JSON.parse(localStorage.getItem(e))||{}}catch{}t.forEach(e=>{const t=n(e);if(!t||e.classList.contains("opened-dir"))return;s[t]&&(e.classList.remove("closed-dir"),e.classList.add("opened-dir"))}),addEventListener("pagehide",()=>{const s={};t.forEach(e=>{const t=n(e);t&&(s[t]=e.classList.contains("opened-dir"))}),localStorage.setItem(e,JSON.stringify(s))})})()</script><article class=main><div class=title><h1 class=title-header>Moving from NvChad to Native Neovim 0.12</h1></div><div class=content><blockquote><p>Part of my <a href=https://github.com/j-dumas/dotfiles>dotfiles</a></p></blockquote><h2 id=summary>Summary</h2><p>I&rsquo;ve wanted for a while now to move from <a href=https://nvchad.com/>NvChad</a> to a more simple and personalized Neovim config. I thus decided to redo all my config in the new Neovim 0.12 from scratch by readding only what I need and throwing out the rest, things like <code>mason</code> and <code>mason-lspconfig</code>, <code>lazy</code>, etc.</p><h2 id=the-config>The Config</h2><h3 id=whats-needed>What&rsquo;s Needed?</h3><p>To transform Neovim into the experience I had with NvChad, i.e. close to a full IDE, I&rsquo;ll need</p><ul><li><input checked disabled type=checkbox> Colorscheme</li><li><input checked disabled type=checkbox> Statusline</li><li><input checked disabled type=checkbox> Tree</li><li><input checked disabled type=checkbox> Highlight</li><li><input checked disabled type=checkbox> Formatter</li><li><input checked disabled type=checkbox> LSP</li><li><input checked disabled type=checkbox> File picker/live grep</li><li><input checked disabled type=checkbox> Autocompletion</li><li><input checked disabled type=checkbox> A Git client to not rely on switching tmux panes for lazygit</li><li><input disabled type=checkbox> Linter</li><li><input disabled type=checkbox> Debugger</li></ul><h3 id=a-clean-structure>A Clean Structure</h3><p>Let&rsquo;s start with the structure of the config directory:</p><div class=codeblock><div class=copy-button-box><button class=copy-button state=copy data=~/.config/nvim/%0a%e2%94%9c%e2%94%80%e2%94%80%20init.lua%0a%e2%94%94%e2%94%80%e2%94%80%20lua/%0a%09%e2%94%9c%e2%94%80%e2%94%80%20plugins/%0a%09%7c%20%20%20%e2%94%9c%e2%94%80%e2%94%80%20init.lua%0a%09%7c%20%20%20%e2%94%9c%e2%94%80%e2%94%80%20cmp.lua%0a%09%7c%20%20%20%e2%94%9c%e2%94%80%e2%94%80%20format.lua%0a%09%7c%20%20%20%e2%94%9c%e2%94%80%e2%94%80%20fzf-lua.lua%0a%09%7c%20%20%20%e2%94%9c%e2%94%80%e2%94%80%20lsp.lua%0a%09%7c%20%20%20%e2%94%9c%e2%94%80%e2%94%80%20qol.lua%0a%09%7c%20%20%20%e2%94%9c%e2%94%80%e2%94%80%20tree.lua%0a%09%7c%20%20%20%e2%94%9c%e2%94%80%e2%94%80%20treesitter.lua%0a%09%7c%20%20%20%e2%94%94%e2%94%80%e2%94%80%20ui.lua%0a%09%e2%94%9c%e2%94%80%e2%94%80%20autocmds.lua%0a%09%e2%94%9c%e2%94%80%e2%94%80%20keymaps.lua%0a%09%e2%94%94%e2%94%80%e2%94%80%20options.lua%0a%09>
+<i class="bi bi-copy"></i></button></div><div class=highlight><pre tabindex=0 style=color:#cad3f5;background-color:#24273a;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-txt data-lang=txt><span style=display:flex><span>~/.config/nvim/
+</span></span><span style=display:flex><span>├── init.lua
+</span></span><span style=display:flex><span>└── lua/
+</span></span><span style=display:flex><span>	├── plugins/
+</span></span><span style=display:flex><span>	|   ├── init.lua
+</span></span><span style=display:flex><span>	|   ├── cmp.lua
+</span></span><span style=display:flex><span>	|   ├── format.lua
+</span></span><span style=display:flex><span>	|   ├── fzf-lua.lua
+</span></span><span style=display:flex><span>	|   ├── lsp.lua
+</span></span><span style=display:flex><span>	|   ├── qol.lua
+</span></span><span style=display:flex><span>	|   ├── tree.lua
+</span></span><span style=display:flex><span>	|   ├── treesitter.lua
+</span></span><span style=display:flex><span>	|   └── ui.lua
+</span></span><span style=display:flex><span>	├── autocmds.lua
+</span></span><span style=display:flex><span>	├── keymaps.lua
+</span></span><span style=display:flex><span>	└── options.lua
+</span></span><span style=display:flex><span>	</span></span></code></pre></div></div><h3 id=common-options>Common Options</h3><p>Here are the options I used. These were taken from the NvChad config to have a similar feel and also from <a href=https://dotfiles.substack.com/p/neovim-options-the-most-common-ones>a list of the most common options in Neovim</a>, like tab size, splitting directions, clipboard and rounded borders, etc.</p><div class=codeblock><div class=copy-button-box><button class=copy-button state=copy data="require%28%27vim._core.ui2%27%29.enable%28%29%0a%0avim.g.netrw_banner%20=%200%0avim.g.mapleader%20=%20%27%20%27%0a%0avim.o.nu%20=%20true%0avim.o.relativenumber%20=%20true%0a%0avim.o.tabstop%20=%204%0avim.o.softtabstop%20=%204%0avim.o.shiftwidth%20=%204%0avim.o.expandtab%20=%20true%0avim.o.smartindent%20=%20true%0a%0avim.o.inccommand%20=%20%22split%22%0avim.o.splitbelow%20=%20true%0avim.o.splitright%20=%20true%0a%0avim.o.ignorecase%20=%20true%0avim.o.smartcase%20=%20true%0avim.o.laststatus%20=%203%0a%0avim.o.swapfile%20=%20false%0avim.o.backup%20=%20false%0avim.o.undodir%20=%20vim.fn.stdpath%28%22data%22%29%20..%20%22/undodir%22%0avim.o.undofile%20=%20true%0a%0avim.o.clipboard%20=%20%22unnamedplus%22%0avim.o.cursorline%20=%20true%0avim.o.cursorlineopt%20=%20%22number%22%0avim.o.scrolloff%20=%208%0avim.o.signcolumn%20=%20%22yes%22%0avim.o.termguicolors%20=%20true%0avim.opt.whichwrap:append%20%22%3c%3e[]hl%22%0avim.o.winborder%20=%20%22rounded%22">
+<i class="bi bi-copy"></i></button></div><div class=highlight><pre tabindex=0 style=color:#cad3f5;background-color:#24273a;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-lua data-lang=lua><span style=display:flex><span>require(<span style=color:#a6da95>&#39;vim._core.ui2&#39;</span>).enable()
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>vim.g.netrw_banner <span style=color:#91d7e3;font-weight:700>=</span> <span style=color:#f5a97f>0</span>
+</span></span><span style=display:flex><span>vim.g.mapleader <span style=color:#91d7e3;font-weight:700>=</span> <span style=color:#a6da95>&#39; &#39;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>vim.o.nu <span style=color:#91d7e3;font-weight:700>=</span> <span style=color:#f5a97f>true</span>
+</span></span><span style=display:flex><span>vim.o.relativenumber <span style=color:#91d7e3;font-weight:700>=</span> <span style=color:#f5a97f>true</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>vim.o.tabstop <span style=color:#91d7e3;font-weight:700>=</span> <span style=color:#f5a97f>4</span>
+</span></span><span style=display:flex><span>vim.o.softtabstop <span style=color:#91d7e3;font-weight:700>=</span> <span style=color:#f5a97f>4</span>
+</span></span><span style=display:flex><span>vim.o.shiftwidth <span style=color:#91d7e3;font-weight:700>=</span> <span style=color:#f5a97f>4</span>
+</span></span><span style=display:flex><span>vim.o.expandtab <span style=color:#91d7e3;font-weight:700>=</span> <span style=color:#f5a97f>true</span>
+</span></span><span style=display:flex><span>vim.o.smartindent <span style=color:#91d7e3;font-weight:700>=</span> <span style=color:#f5a97f>true</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>vim.o.inccommand <span style=color:#91d7e3;font-weight:700>=</span> <span style=color:#a6da95>&#34;split&#34;</span>
+</span></span><span style=display:flex><span>vim.o.splitbelow <span style=color:#91d7e3;font-weight:700>=</span> <span style=color:#f5a97f>true</span>
+</span></span><span style=display:flex><span>vim.o.splitright <span style=color:#91d7e3;font-weight:700>=</span> <span style=color:#f5a97f>true</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>vim.o.ignorecase <span style=color:#91d7e3;font-weight:700>=</span> <span style=color:#f5a97f>true</span>
+</span></span><span style=display:flex><span>vim.o.smartcase <span style=color:#91d7e3;font-weight:700>=</span> <span style=color:#f5a97f>true</span>
+</span></span><span style=display:flex><span>vim.o.laststatus <span style=color:#91d7e3;font-weight:700>=</span> <span style=color:#f5a97f>3</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>vim.o.swapfile <span style=color:#91d7e3;font-weight:700>=</span> <span style=color:#f5a97f>false</span>
+</span></span><span style=display:flex><span>vim.o.backup <span style=color:#91d7e3;font-weight:700>=</span> <span style=color:#f5a97f>false</span>
+</span></span><span style=display:flex><span>vim.o.undodir <span style=color:#91d7e3;font-weight:700>=</span> vim.fn.stdpath(<span style=color:#a6da95>&#34;data&#34;</span>) <span style=color:#91d7e3;font-weight:700>..</span> <span style=color:#a6da95>&#34;/undodir&#34;</span>
+</span></span><span style=display:flex><span>vim.o.undofile <span style=color:#91d7e3;font-weight:700>=</span> <span style=color:#f5a97f>true</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>vim.o.clipboard <span style=color:#91d7e3;font-weight:700>=</span> <span style=color:#a6da95>&#34;unnamedplus&#34;</span>
+</span></span><span style=display:flex><span>vim.o.cursorline <span style=color:#91d7e3;font-weight:700>=</span> <span style=color:#f5a97f>true</span>
+</span></span><span style=display:flex><span>vim.o.cursorlineopt <span style=color:#91d7e3;font-weight:700>=</span> <span style=color:#a6da95>&#34;number&#34;</span>
+</span></span><span style=display:flex><span>vim.o.scrolloff <span style=color:#91d7e3;font-weight:700>=</span> <span style=color:#f5a97f>8</span>
+</span></span><span style=display:flex><span>vim.o.signcolumn <span style=color:#91d7e3;font-weight:700>=</span> <span style=color:#a6da95>&#34;yes&#34;</span>
+</span></span><span style=display:flex><span>vim.o.termguicolors <span style=color:#91d7e3;font-weight:700>=</span> <span style=color:#f5a97f>true</span>
+</span></span><span style=display:flex><span>vim.opt.whichwrap:append <span style=color:#a6da95>&#34;&lt;&gt;[]hl&#34;</span>
+</span></span><span style=display:flex><span>vim.o.winborder <span style=color:#91d7e3;font-weight:700>=</span> <span style=color:#a6da95>&#34;rounded&#34;</span></span></span></code></pre></div></div><h3 id=ui-colorscheme-and-statusline>UI: Colorscheme and Statusline</h3><p>Here are the three plugins I use for UI: <a href=https://github.com/catppuccin/nvim><code>catppuccin-nvim</code></a>, <a href=https://github.com/nvim-lualine/lualine.nvim><code>lualine</code></a> and some icons with <a href=https://github.com/nvim-tree/nvim-web-devicons><code>nvim-web-devicons</code></a>.</p><div class=codeblock><div class=copy-button-box><button class=copy-button state=copy data=#ZgotmplZ>
+<i class="bi bi-copy"></i></button></div><div class=highlight><pre tabindex=0 style=color:#cad3f5;background-color:#24273a;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-lua data-lang=lua><span style=display:flex><span>vim.pack.add { 
+</span></span><span style=display:flex><span>    { 
+</span></span><span style=display:flex><span>        src <span style=color:#91d7e3;font-weight:700>=</span> <span style=color:#a6da95>&#34;https://github.com/catppuccin/nvim&#34;</span>,
+</span></span><span style=display:flex><span>        name <span style=color:#91d7e3;font-weight:700>=</span> <span style=color:#a6da95>&#34;catppuccin&#34;</span> 
+</span></span><span style=display:flex><span>    } ,
+</span></span><span style=display:flex><span>    <span style=color:#a6da95>&#39;https://github.com/nvim-tree/nvim-web-devicons&#39;</span>,
+</span></span><span style=display:flex><span>    <span style=color:#a6da95>&#39;https://github.com/nvim-lualine/lualine.nvim&#39;</span>
+</span></span><span style=display:flex><span>}</span></span></code></pre></div></div><p>Since I already use Catppuccin Mocha nearly everywhere, I installed it for Neovim. For a terminal, I use kitty with a transparent background, so I opted to have Neovim transparent as well. I also modified the colors of the sections to fit my tmux look (which is kind of a bastard between the dracula tmux plugin and catppuccin colors). I changed some highlights to fit my taste, like the <code>MatchParen</code> to remove colors of matching brackets and only keep the background highlight.</p><div class=codeblock><div class=copy-button-box><button class=copy-button state=copy data="require%28%22catppuccin%22%29.setup%28%7b%0a%20%20%20%20flavour%20=%20%22mocha%22,%0a%20%20%20%20transparent_background%20=%20true,%0a%20%20%20%20custom_highlights%20=%20function%28colors%29%0a%20%20%20%20%20%20%20%20return%20%7b%0a%20%20%20%20%20%20%20%20%20%20%20%20MatchParen%20=%20%7b%20fg%20=%20colors.none%20%7d,%0a%20%20%20%20%20%20%20%20%20%20%20%20IncSearch%20=%20%7b%20bg%20=%20colors.green%20%7d,%0a%20%20%20%20%20%20%20%20%20%20%20%20NormalFloat%20=%20%7b%20bg%20=%20colors.none%20%7d,%0a%20%20%20%20%20%20%20%20%20%20%20%20FloatBorder%20=%20%7b%20bg%20=%20colors.none%20%7d,%0a%20%20%20%20%20%20%20%20%7d%0a%20%20%20%20end,%0a%20%20%20%20integrations%20=%20%7b%0a%20%20%20%20%20%20%20%20lualine%20=%20%7b%0a%20%20%20%20%20%20%20%20%20%20%20%20mocha%20=%20function%28colors%29%0a%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20return%20%7b%0a%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20normal%20=%20%7b%0a%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20a%20=%20%7b%20bg%20=%20%22#8bc2f0%22%20%7d,%0a%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20b%20=%20%7b%20fg%20=%20colors.text%20%7d,%0a%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20c%20=%20%7b%20fg%20=%20colors.surface2%20%7d,%0a%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%7d,%0a%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20insert%20=%20%7b%0a%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20b%20=%20%7b%20fg%20=%20colors.text%20%7d,%0a%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%7d,%0a%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20visual%20=%20%7b%0a%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20b%20=%20%7b%20fg%20=%20colors.text%20%7d,%0a%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%7d,%0a%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20command%20=%20%7b%0a%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20b%20=%20%7b%20fg%20=%20colors.text%20%7d,%0a%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%7d,%0a%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%7d%0a%20%20%20%20%20%20%20%20%20%20%20%20end%0a%20%20%20%20%20%20%20%20%7d%0a%20%20%20%20%7d%0a%7d%29%0avim.cmd.colorscheme%20%22catppuccin-nvim%22">
+<i class="bi bi-copy"></i></button></div><div class=highlight><pre tabindex=0 style=color:#cad3f5;background-color:#24273a;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-lua data-lang=lua><span style=display:flex><span>require(<span style=color:#a6da95>&#34;catppuccin&#34;</span>).setup({
+</span></span><span style=display:flex><span>    flavour <span style=color:#91d7e3;font-weight:700>=</span> <span style=color:#a6da95>&#34;mocha&#34;</span>,
+</span></span><span style=display:flex><span>    transparent_background <span style=color:#91d7e3;font-weight:700>=</span> <span style=color:#f5a97f>true</span>,
+</span></span><span style=display:flex><span>    custom_highlights <span style=color:#91d7e3;font-weight:700>=</span> <span style=color:#c6a0f6>function</span>(colors)
+</span></span><span style=display:flex><span>        <span style=color:#c6a0f6>return</span> {
+</span></span><span style=display:flex><span>            MatchParen <span style=color:#91d7e3;font-weight:700>=</span> { fg <span style=color:#91d7e3;font-weight:700>=</span> colors.none },
+</span></span><span style=display:flex><span>            IncSearch <span style=color:#91d7e3;font-weight:700>=</span> { bg <span style=color:#91d7e3;font-weight:700>=</span> colors.green },
+</span></span><span style=display:flex><span>            NormalFloat <span style=color:#91d7e3;font-weight:700>=</span> { bg <span style=color:#91d7e3;font-weight:700>=</span> colors.none },
+</span></span><span style=display:flex><span>            FloatBorder <span style=color:#91d7e3;font-weight:700>=</span> { bg <span style=color:#91d7e3;font-weight:700>=</span> colors.none },
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>    <span style=color:#c6a0f6>end</span>,
+</span></span><span style=display:flex><span>    integrations <span style=color:#91d7e3;font-weight:700>=</span> {
+</span></span><span style=display:flex><span>        lualine <span style=color:#91d7e3;font-weight:700>=</span> {
+</span></span><span style=display:flex><span>            mocha <span style=color:#91d7e3;font-weight:700>=</span> <span style=color:#c6a0f6>function</span>(colors)
+</span></span><span style=display:flex><span>                <span style=color:#c6a0f6>return</span> {
+</span></span><span style=display:flex><span>                    normal <span style=color:#91d7e3;font-weight:700>=</span> {
+</span></span><span style=display:flex><span>                        a <span style=color:#91d7e3;font-weight:700>=</span> { bg <span style=color:#91d7e3;font-weight:700>=</span> <span style=color:#a6da95>&#34;#8bc2f0&#34;</span> },
+</span></span><span style=display:flex><span>                        b <span style=color:#91d7e3;font-weight:700>=</span> { fg <span style=color:#91d7e3;font-weight:700>=</span> colors.text },
+</span></span><span style=display:flex><span>                        c <span style=color:#91d7e3;font-weight:700>=</span> { fg <span style=color:#91d7e3;font-weight:700>=</span> colors.surface2 },
+</span></span><span style=display:flex><span>                    },
+</span></span><span style=display:flex><span>                    insert <span style=color:#91d7e3;font-weight:700>=</span> {
+</span></span><span style=display:flex><span>                        b <span style=color:#91d7e3;font-weight:700>=</span> { fg <span style=color:#91d7e3;font-weight:700>=</span> colors.text },
+</span></span><span style=display:flex><span>                    },
+</span></span><span style=display:flex><span>                    visual <span style=color:#91d7e3;font-weight:700>=</span> {
+</span></span><span style=display:flex><span>                        b <span style=color:#91d7e3;font-weight:700>=</span> { fg <span style=color:#91d7e3;font-weight:700>=</span> colors.text },
+</span></span><span style=display:flex><span>                    },
+</span></span><span style=display:flex><span>                    command <span style=color:#91d7e3;font-weight:700>=</span> {
+</span></span><span style=display:flex><span>                        b <span style=color:#91d7e3;font-weight:700>=</span> { fg <span style=color:#91d7e3;font-weight:700>=</span> colors.text },
+</span></span><span style=display:flex><span>                    },
+</span></span><span style=display:flex><span>                }
+</span></span><span style=display:flex><span>            <span style=color:#c6a0f6>end</span>
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>})
+</span></span><span style=display:flex><span>vim.cmd.colorscheme <span style=color:#a6da95>&#34;catppuccin-nvim&#34;</span></span></span></code></pre></div></div><p>And here is lualine as I like:</p><div class=codeblock><div class=copy-button-box><button class=copy-button state=copy data="require%28%27lualine%27%29.setup%28%7b%0a%20%20%20%20options%20=%20%7b%0a%20%20%20%20%20%20%20%20component_separators%20=%20%7bleft%20=%20%27%27,%20right%20=%20%27%27%7d,%0a%20%20%20%20%20%20%20%20section_separators%20=%20%7bleft%20=%20%27%e2%97%a4%27,%20right%20=%20%27%ee%82%b6%27%7d%0a%20%20%20%20%7d,%0a%20%20%20%20sections%20=%20%7b%0a%20%20%20%20%20%20%20%20lualine_a%20=%20%7b%27mode%27%7d,%0a%20%20%20%20%20%20%20%20lualine_b%20=%20%7b%7b%27filename%27,%20path%20=%201%7d%7d,%0a%20%20%20%20%20%20%20%20lualine_c%20=%20%7b%27branch%27,%20%27diff%27%7d,%0a%20%20%20%20%20%20%20%20lualine_x%20=%20%7b%27diagnostics%27,%20%27lsp_status%27%7d,%0a%20%20%20%20%20%20%20%20lualine_y%20=%20%7b%27location%27%7d,%0a%20%20%20%20%20%20%20%20lualine_z%20=%20%7b%27progress%27%7d%0a%20%20%20%20%7d,%0a%20%20%20%20extensions%20=%20%7b%27nvim-tree%27%7d%0a%7d%29">
+<i class="bi bi-copy"></i></button></div><div class=highlight><pre tabindex=0 style=color:#cad3f5;background-color:#24273a;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-lua data-lang=lua><span style=display:flex><span>require(<span style=color:#a6da95>&#39;lualine&#39;</span>).setup({
+</span></span><span style=display:flex><span>    options <span style=color:#91d7e3;font-weight:700>=</span> {
+</span></span><span style=display:flex><span>        component_separators <span style=color:#91d7e3;font-weight:700>=</span> {left <span style=color:#91d7e3;font-weight:700>=</span> <span style=color:#a6da95>&#39;&#39;</span>, right <span style=color:#91d7e3;font-weight:700>=</span> <span style=color:#a6da95>&#39;&#39;</span>},
+</span></span><span style=display:flex><span>        section_separators <span style=color:#91d7e3;font-weight:700>=</span> {left <span style=color:#91d7e3;font-weight:700>=</span> <span style=color:#a6da95>&#39;◤&#39;</span>, right <span style=color:#91d7e3;font-weight:700>=</span> <span style=color:#a6da95>&#39;&#39;</span>}
+</span></span><span style=display:flex><span>    },
+</span></span><span style=display:flex><span>    sections <span style=color:#91d7e3;font-weight:700>=</span> {
+</span></span><span style=display:flex><span>        lualine_a <span style=color:#91d7e3;font-weight:700>=</span> {<span style=color:#a6da95>&#39;mode&#39;</span>},
+</span></span><span style=display:flex><span>        lualine_b <span style=color:#91d7e3;font-weight:700>=</span> {{<span style=color:#a6da95>&#39;filename&#39;</span>, path <span style=color:#91d7e3;font-weight:700>=</span> <span style=color:#f5a97f>1</span>}},
+</span></span><span style=display:flex><span>        lualine_c <span style=color:#91d7e3;font-weight:700>=</span> {<span style=color:#a6da95>&#39;branch&#39;</span>, <span style=color:#a6da95>&#39;diff&#39;</span>},
+</span></span><span style=display:flex><span>        lualine_x <span style=color:#91d7e3;font-weight:700>=</span> {<span style=color:#a6da95>&#39;diagnostics&#39;</span>, <span style=color:#a6da95>&#39;lsp_status&#39;</span>},
+</span></span><span style=display:flex><span>        lualine_y <span style=color:#91d7e3;font-weight:700>=</span> {<span style=color:#a6da95>&#39;location&#39;</span>},
+</span></span><span style=display:flex><span>        lualine_z <span style=color:#91d7e3;font-weight:700>=</span> {<span style=color:#a6da95>&#39;progress&#39;</span>}
+</span></span><span style=display:flex><span>    },
+</span></span><span style=display:flex><span>    extensions <span style=color:#91d7e3;font-weight:700>=</span> {<span style=color:#a6da95>&#39;nvim-tree&#39;</span>}
+</span></span><span style=display:flex><span>})</span></span></code></pre></div></div><h3 id=neotree-a-file-viewer>NeoTree: A File Viewer</h3><p>I&rsquo;m used to having a file viewer in the side bar and did not really want to use <code>netrw</code>, so I decided to try <a href=https://github.com/nvim-neo-tree/neo-tree.nvim><code>neo-tree</code></a>. I added <code>nvim-window-picker</code> for picking a specific window when opening a file instead of opening in the last one. I added nicer colors for the window picker because the default was bright green. It&rsquo;s now red with a transparent background. Finally I changed the mappings to always ask which window to open a file when there are splits.</p><div class=codeblock><div class=copy-button-box><button class=copy-button state=copy data=#ZgotmplZ>
+<i class="bi bi-copy"></i></button></div><div class=highlight><pre tabindex=0 style=color:#cad3f5;background-color:#24273a;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-lua data-lang=lua><span style=display:flex><span>vim.pack.add({
+</span></span><span style=display:flex><span>  {
+</span></span><span style=display:flex><span>    src <span style=color:#91d7e3;font-weight:700>=</span> <span style=color:#a6da95>&#39;https://github.com/nvim-neo-tree/neo-tree.nvim&#39;</span>,
+</span></span><span style=display:flex><span>    version <span style=color:#91d7e3;font-weight:700>=</span> vim.version.range(<span style=color:#a6da95>&#39;3&#39;</span>)
+</span></span><span style=display:flex><span>  },
+</span></span><span style=display:flex><span>  <span style=color:#6e738d;font-style:italic>-- Dependencies</span>
+</span></span><span style=display:flex><span>  <span style=color:#a6da95>&#34;https://github.com/nvim-lua/plenary.nvim&#34;</span>,
+</span></span><span style=display:flex><span>  <span style=color:#a6da95>&#34;https://github.com/MunifTanjim/nui.nvim&#34;</span>,
+</span></span><span style=display:flex><span>  {
+</span></span><span style=display:flex><span>      src <span style=color:#91d7e3;font-weight:700>=</span> <span style=color:#a6da95>&#39;https://github.com/s1n7ax/nvim-window-picker&#39;</span>, 
+</span></span><span style=display:flex><span>      version <span style=color:#91d7e3;font-weight:700>=</span> vim.version.range(<span style=color:#a6da95>&#39;2.*&#39;</span>) 
+</span></span><span style=display:flex><span>  },
+</span></span><span style=display:flex><span>})
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>require <span style=color:#a6da95>&#39;window-picker&#39;</span>.setup({
+</span></span><span style=display:flex><span>    hint <span style=color:#91d7e3;font-weight:700>=</span> <span style=color:#a6da95>&#39;statusline-winbar&#39;</span>,
+</span></span><span style=display:flex><span>    selection_chars <span style=color:#91d7e3;font-weight:700>=</span> <span style=color:#a6da95>&#39;ABCDEFGHIJKLMNOP&#39;</span>,
+</span></span><span style=display:flex><span>    highlights <span style=color:#91d7e3;font-weight:700>=</span> {
+</span></span><span style=display:flex><span>        enabled <span style=color:#91d7e3;font-weight:700>=</span> <span style=color:#f5a97f>true</span>,
+</span></span><span style=display:flex><span>        statusline <span style=color:#91d7e3;font-weight:700>=</span> {
+</span></span><span style=display:flex><span>            unfocused <span style=color:#91d7e3;font-weight:700>=</span> {
+</span></span><span style=display:flex><span>                fg <span style=color:#91d7e3;font-weight:700>=</span> <span style=color:#a6da95>&#39;#f38ba8&#39;</span>,
+</span></span><span style=display:flex><span>                bg <span style=color:#91d7e3;font-weight:700>=</span> <span style=color:#a6da95>&#39;NONE&#39;</span>,
+</span></span><span style=display:flex><span>                bold <span style=color:#91d7e3;font-weight:700>=</span> <span style=color:#f5a97f>true</span>,
+</span></span><span style=display:flex><span>            },
+</span></span><span style=display:flex><span>        },
+</span></span><span style=display:flex><span>        winbar <span style=color:#91d7e3;font-weight:700>=</span> {
+</span></span><span style=display:flex><span>            unfocused <span style=color:#91d7e3;font-weight:700>=</span> {
+</span></span><span style=display:flex><span>                fg <span style=color:#91d7e3;font-weight:700>=</span> <span style=color:#a6da95>&#39;#f38ba8&#39;</span>,
+</span></span><span style=display:flex><span>                bg <span style=color:#91d7e3;font-weight:700>=</span> <span style=color:#a6da95>&#39;NONE&#39;</span>,
+</span></span><span style=display:flex><span>                bold <span style=color:#91d7e3;font-weight:700>=</span> <span style=color:#f5a97f>true</span>,
+</span></span><span style=display:flex><span>            },
+</span></span><span style=display:flex><span>        },
+</span></span><span style=display:flex><span>    },
+</span></span><span style=display:flex><span>})
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>require(<span style=color:#a6da95>&#34;neo-tree&#34;</span>).setup({
+</span></span><span style=display:flex><span>  window <span style=color:#91d7e3;font-weight:700>=</span> {
+</span></span><span style=display:flex><span>    mappings <span style=color:#91d7e3;font-weight:700>=</span> {
+</span></span><span style=display:flex><span>      [<span style=color:#a6da95>&#34;&lt;cr&gt;&#34;</span>] <span style=color:#91d7e3;font-weight:700>=</span> <span style=color:#a6da95>&#34;open_with_window_picker&#34;</span>,
+</span></span><span style=display:flex><span>	  [<span style=color:#a6da95>&#34;&lt;2-LeftMouse&gt;&#34;</span>] <span style=color:#91d7e3;font-weight:700>=</span> <span style=color:#a6da95>&#34;open_with_window_picker&#34;</span>,
+</span></span><span style=display:flex><span>      [<span style=color:#a6da95>&#34;s&#34;</span>]    <span style=color:#91d7e3;font-weight:700>=</span> <span style=color:#a6da95>&#34;split_with_window_picker&#34;</span>,
+</span></span><span style=display:flex><span>      [<span style=color:#a6da95>&#34;v&#34;</span>]    <span style=color:#91d7e3;font-weight:700>=</span> <span style=color:#a6da95>&#34;vsplit_with_window_picker&#34;</span>,
+</span></span><span style=display:flex><span>      [<span style=color:#a6da95>&#34;S&#34;</span>]    <span style=color:#91d7e3;font-weight:700>=</span> <span style=color:#a6da95>&#34;noop&#34;</span>,
+</span></span><span style=display:flex><span>      [<span style=color:#a6da95>&#34;w&#34;</span>]    <span style=color:#91d7e3;font-weight:700>=</span> <span style=color:#a6da95>&#34;noop&#34;</span>,
+</span></span><span style=display:flex><span>    },
+</span></span><span style=display:flex><span>  },
+</span></span><span style=display:flex><span>})
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#ed8796>local</span> opts <span style=color:#91d7e3;font-weight:700>=</span> <span style=color:#c6a0f6>function</span>(desc)
+</span></span><span style=display:flex><span>            <span style=color:#c6a0f6>return</span> { desc <span style=color:#91d7e3;font-weight:700>=</span> <span style=color:#a6da95>&#34;Neotree: &#34;</span> <span style=color:#91d7e3;font-weight:700>..</span> desc }
+</span></span><span style=display:flex><span>        <span style=color:#c6a0f6>end</span>
+</span></span><span style=display:flex><span><span style=color:#ed8796>local</span> map <span style=color:#91d7e3;font-weight:700>=</span> vim.keymap.set
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>map(<span style=color:#a6da95>&#34;n&#34;</span>, <span style=color:#a6da95>&#34;&lt;C-n&gt;&#34;</span>, <span style=color:#a6da95>&#34;&lt;cmd&gt;Neotree toggle reveal=true&lt;cr&gt;&#34;</span>, opts(<span style=color:#a6da95>&#34;Toggle Explorer&#34;</span>))
+</span></span><span style=display:flex><span>map(<span style=color:#a6da95>&#34;n&#34;</span>, <span style=color:#a6da95>&#34;&lt;leader&gt;e&#34;</span>, <span style=color:#a6da95>&#34;&lt;cmd&gt;Neotree focus&#34;</span>, opts(<span style=color:#a6da95>&#34;Focus Explorer&#34;</span>))
+</span></span><span style=display:flex><span>map(<span style=color:#a6da95>&#34;n&#34;</span>, <span style=color:#a6da95>&#34;&lt;leader&gt;b&#34;</span>, <span style=color:#a6da95>&#34;&lt;cmd&gt;Neotree focus source=buffers&lt;cr&gt;&#34;</span>, opts(<span style=color:#a6da95>&#34;Focus Buffers&#34;</span>))</span></span></code></pre></div></div><h3 id=treesitter-better-highlighting-and-parsers>Treesitter: Better Highlighting and Parsers</h3><p>Neovim 0.12+ now bundles a couple languages for highlights, but it&rsquo;s not enough. Since <a href=https://github.com/nvim-treesitter/nvim-treesitter><code>nvim-treesitter</code></a> is now archived, I installed <a href=https://github.com/romus204/tree-sitter-manager.nvim><code>tree-sitter-manager</code></a> and installed a couple languages like <code>c</code>, <code>cpp</code>, <code>latex</code>, <code>lua</code> and <code>python</code>.</p><div class=codeblock><div class=copy-button-box><button class=copy-button state=copy data=#ZgotmplZ>
+<i class="bi bi-copy"></i></button></div><div class=highlight><pre tabindex=0 style=color:#cad3f5;background-color:#24273a;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-lua data-lang=lua><span style=display:flex><span>vim.pack.add {
+</span></span><span style=display:flex><span>  <span style=color:#a6da95>&#34;https://github.com/romus204/tree-sitter-manager.nvim&#34;</span>
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>require(<span style=color:#a6da95>&#34;tree-sitter-manager&#34;</span>).setup()</span></span></code></pre></div></div><h3 id=conform-a-formatter>Conform: A Formatter</h3><p>I decided to use <a href=https://github.com/stevearc/conform.nvim><code>conform</code></a> to invoke formatters in my code and set their settings. I started by configuring <code>stylua</code> to then format my config files correctly and thus test if everything works.</p><div class=codeblock><div class=copy-button-box><button class=copy-button state=copy data=#ZgotmplZ>
+<i class="bi bi-copy"></i></button></div><div class=highlight><pre tabindex=0 style=color:#cad3f5;background-color:#24273a;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-lua data-lang=lua><span style=display:flex><span>vim.pack.add({
+</span></span><span style=display:flex><span>    <span style=color:#a6da95>&#34;https://github.com/stevearc/conform.nvim&#34;</span>,
+</span></span><span style=display:flex><span>})
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>require(<span style=color:#a6da95>&#34;conform&#34;</span>).setup({
+</span></span><span style=display:flex><span>    formatters_by_ft <span style=color:#91d7e3;font-weight:700>=</span> {
+</span></span><span style=display:flex><span>        lua <span style=color:#91d7e3;font-weight:700>=</span> { <span style=color:#a6da95>&#34;stylua&#34;</span> },
+</span></span><span style=display:flex><span>    },
+</span></span><span style=display:flex><span>    default_format_opts <span style=color:#91d7e3;font-weight:700>=</span> {
+</span></span><span style=display:flex><span>        lsp_format <span style=color:#91d7e3;font-weight:700>=</span> <span style=color:#a6da95>&#34;fallback&#34;</span>,
+</span></span><span style=display:flex><span>    },
+</span></span><span style=display:flex><span>    formatters <span style=color:#91d7e3;font-weight:700>=</span> {
+</span></span><span style=display:flex><span>        stylua <span style=color:#91d7e3;font-weight:700>=</span> {
+</span></span><span style=display:flex><span>            prepend_args <span style=color:#91d7e3;font-weight:700>=</span> { <span style=color:#a6da95>&#34;--indent-type&#34;</span>, <span style=color:#a6da95>&#34;Spaces&#34;</span> },
+</span></span><span style=display:flex><span>        },
+</span></span><span style=display:flex><span>    },
+</span></span><span style=display:flex><span>})
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>vim.keymap.set(<span style=color:#a6da95>&#34;n&#34;</span>, <span style=color:#a6da95>&#34;&lt;leader&gt;fm&#34;</span>, <span style=color:#c6a0f6>function</span>()
+</span></span><span style=display:flex><span>    require(<span style=color:#a6da95>&#34;conform&#34;</span>).format()
+</span></span><span style=display:flex><span><span style=color:#c6a0f6>end</span>, { desc <span style=color:#91d7e3;font-weight:700>=</span> <span style=color:#a6da95>&#34;Format file&#34;</span> })</span></span></code></pre></div></div><blockquote class="alert alert-important"><p class=alert-heading>Installing tools</p><p>I mentioned I wanted to get away from <code>mason</code> to install tools like LSPs and formatters. I landed on <a href=https://mise.jdx.dev/><code>mise</code></a> to install the tools I need on my system and get them in the <code>$PATH</code> so that Neovim can find them. It works just like using <code>npm</code> or <code>pip</code>, but with the recent security track record of the former, I did not want to install my tools with it.</p><p>You can install tools like <code>stylua</code> with <code>mise use -g stylua</code> and <code>lua_ls</code> with <code>muse use -g lua-language-server</code>.</p></blockquote><h3 id=lsps>LSPs</h3><p>Neovim&rsquo;s native lsp is powerful, but I still like to have default configs since they are not yet in nvim. So I installed <a href=https://github.com/neovim/nvim-lspconfig><code>nvim-lsp-config</code></a> for defaults that I can extend.</p><p>I also decided to change the keymaps for something more intuitive to me, like goto definition (<code>gd</code>), or code actions (<code>ca</code>) or rename (<code>rn</code>) like it was used in NvChad.</p><p>Then, I enabled the LSPs I wanted after having installed them with either <code>mise</code>, <code>pip</code> or <code>dnf</code>. I decided to let <code>pylsp</code> manage the linters and formatters since it seemed to simpler to let them work together as intended by the devs, as opposed to C where I&rsquo;ll add <code>clang-format</code> and <code>clang-tidy</code>. Later I&rsquo;ll add <code>ltex_plus</code> to edit Latex files.</p><p>I also added virtual lines to show error diagnostic under the errors. We&rsquo;ll see if I keep it or if it is too cluttering.</p><p>Finally, I added <a href=https://github.com/Crysthamus/nvim-file-operations><code>nvim-file-operations</code></a> to implement the events emitted by the file manager so that server that can will update import statements and paths.</p><div class=codeblock><div class=copy-button-box><button class=copy-button state=copy data=#ZgotmplZ>
+<i class="bi bi-copy"></i></button></div><div class=highlight><pre tabindex=0 style=color:#cad3f5;background-color:#24273a;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-lua data-lang=lua><span style=display:flex><span>vim.pack.add({
+</span></span><span style=display:flex><span>    <span style=color:#a6da95>&#34;https://github.com/neovim/nvim-lspconfig&#34;</span>,
+</span></span><span style=display:flex><span>})
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#ed8796>local</span> map <span style=color:#91d7e3;font-weight:700>=</span> vim.keymap.set
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>vim.api.nvim_create_autocmd(<span style=color:#a6da95>&#34;LspAttach&#34;</span>, {
+</span></span><span style=display:flex><span>    callback <span style=color:#91d7e3;font-weight:700>=</span> <span style=color:#c6a0f6>function</span>(args)
+</span></span><span style=display:flex><span>        <span style=color:#ed8796>local</span> opts <span style=color:#91d7e3;font-weight:700>=</span> <span style=color:#c6a0f6>function</span>(desc)
+</span></span><span style=display:flex><span>            <span style=color:#c6a0f6>return</span> { buffer <span style=color:#91d7e3;font-weight:700>=</span> args.buf, desc <span style=color:#91d7e3;font-weight:700>=</span> <span style=color:#a6da95>&#34;LSP: &#34;</span> <span style=color:#91d7e3;font-weight:700>..</span> desc }
+</span></span><span style=display:flex><span>        <span style=color:#c6a0f6>end</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#6e738d;font-style:italic>-- Navigation</span>
+</span></span><span style=display:flex><span>        map(<span style=color:#a6da95>&#34;n&#34;</span>, <span style=color:#a6da95>&#34;gd&#34;</span>, vim.lsp.buf.definition, opts(<span style=color:#a6da95>&#34;Go to Definition&#34;</span>))
+</span></span><span style=display:flex><span>        map(<span style=color:#a6da95>&#34;n&#34;</span>, <span style=color:#a6da95>&#34;gD&#34;</span>, vim.lsp.buf.declaration, opts(<span style=color:#a6da95>&#34;Go to Declaration&#34;</span>))
+</span></span><span style=display:flex><span>        map(<span style=color:#a6da95>&#34;n&#34;</span>, <span style=color:#a6da95>&#34;gi&#34;</span>, vim.lsp.buf.implementation, opts(<span style=color:#a6da95>&#34;Go to Implementation&#34;</span>))
+</span></span><span style=display:flex><span>        map(<span style=color:#a6da95>&#34;n&#34;</span>, <span style=color:#a6da95>&#34;gr&#34;</span>, vim.lsp.buf.references, opts(<span style=color:#a6da95>&#34;Go to References&#34;</span>))
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#6e738d;font-style:italic>-- Actions</span>
+</span></span><span style=display:flex><span>        map(<span style=color:#a6da95>&#34;n&#34;</span>, <span style=color:#a6da95>&#34;&lt;leader&gt;rn&#34;</span>, vim.lsp.buf.rename, opts(<span style=color:#a6da95>&#34;Rename&#34;</span>))
+</span></span><span style=display:flex><span>        map({ <span style=color:#a6da95>&#34;n&#34;</span>, <span style=color:#a6da95>&#34;v&#34;</span> }, <span style=color:#a6da95>&#34;&lt;leader&gt;ca&#34;</span>, vim.lsp.buf.code_action, opts(<span style=color:#a6da95>&#34;Code Action&#34;</span>))
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#6e738d;font-style:italic>-- Diagnostics</span>
+</span></span><span style=display:flex><span>        map(<span style=color:#a6da95>&#34;n&#34;</span>, <span style=color:#a6da95>&#34;&lt;leader&gt;df&#34;</span>, vim.diagnostic.open_float, opts(<span style=color:#a6da95>&#34;Show Diagnostic&#34;</span>))
+</span></span><span style=display:flex><span>        map(<span style=color:#a6da95>&#34;n&#34;</span>, <span style=color:#a6da95>&#34;&lt;leader&gt;dn&#34;</span>, <span style=color:#c6a0f6>function</span>()
+</span></span><span style=display:flex><span>            vim.diagnostic.jump({ count <span style=color:#91d7e3;font-weight:700>=</span> <span style=color:#f5a97f>1</span>, float <span style=color:#91d7e3;font-weight:700>=</span> <span style=color:#f5a97f>true</span> })
+</span></span><span style=display:flex><span>        <span style=color:#c6a0f6>end</span>, opts(<span style=color:#a6da95>&#34;Next Diagnostic&#34;</span>))
+</span></span><span style=display:flex><span>        map(<span style=color:#a6da95>&#34;n&#34;</span>, <span style=color:#a6da95>&#34;&lt;leader&gt;dp&#34;</span>, <span style=color:#c6a0f6>function</span>()
+</span></span><span style=display:flex><span>            vim.diagnostic.jump({ count <span style=color:#91d7e3;font-weight:700>=</span> <span style=color:#91d7e3;font-weight:700>-</span><span style=color:#f5a97f>1</span>, float <span style=color:#91d7e3;font-weight:700>=</span> <span style=color:#f5a97f>true</span> })
+</span></span><span style=display:flex><span>        <span style=color:#c6a0f6>end</span>, opts(<span style=color:#a6da95>&#34;Previous Diagnostic&#34;</span>))
+</span></span><span style=display:flex><span>        map(<span style=color:#a6da95>&#34;n&#34;</span>, <span style=color:#a6da95>&#34;&lt;leader&gt;dl&#34;</span>, vim.diagnostic.setloclist, opts(<span style=color:#a6da95>&#34;Diagnostics List&#34;</span>))
+</span></span><span style=display:flex><span>    <span style=color:#c6a0f6>end</span>,
+</span></span><span style=display:flex><span>})
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#ed8796>local</span> lsp <span style=color:#91d7e3;font-weight:700>=</span> vim.lsp
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>lsp.config(<span style=color:#a6da95>&#34;lua_ls&#34;</span>, {
+</span></span><span style=display:flex><span>    settings <span style=color:#91d7e3;font-weight:700>=</span> {
+</span></span><span style=display:flex><span>        Lua <span style=color:#91d7e3;font-weight:700>=</span> { diagnostics <span style=color:#91d7e3;font-weight:700>=</span> { globals <span style=color:#91d7e3;font-weight:700>=</span> { <span style=color:#a6da95>&#34;vim&#34;</span> } } },
+</span></span><span style=display:flex><span>    },
+</span></span><span style=display:flex><span>})
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>vim.lsp.config(<span style=color:#a6da95>&#34;clangd&#34;</span>, {
+</span></span><span style=display:flex><span>    cmd <span style=color:#91d7e3;font-weight:700>=</span> { <span style=color:#a6da95>&#34;clangd&#34;</span>, <span style=color:#a6da95>&#34;--enable-config&#34;</span> },
+</span></span><span style=display:flex><span>})
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#6e738d;font-style:italic>-- pylsp comes with linter and formatter, so simpler to set here together</span>
+</span></span><span style=display:flex><span>vim.lsp.config(<span style=color:#a6da95>&#34;pylsp&#34;</span>, {
+</span></span><span style=display:flex><span>    settings <span style=color:#91d7e3;font-weight:700>=</span> {
+</span></span><span style=display:flex><span>        pylsp <span style=color:#91d7e3;font-weight:700>=</span> {
+</span></span><span style=display:flex><span>            plugins <span style=color:#91d7e3;font-weight:700>=</span> {
+</span></span><span style=display:flex><span>                pycodestyle <span style=color:#91d7e3;font-weight:700>=</span> {
+</span></span><span style=display:flex><span>                    ignore <span style=color:#91d7e3;font-weight:700>=</span> { <span style=color:#a6da95>&#34;E203&#34;</span> },
+</span></span><span style=display:flex><span>                    maxLineLength <span style=color:#91d7e3;font-weight:700>=</span> <span style=color:#f5a97f>88</span>, <span style=color:#6e738d;font-style:italic>-- Black formatter</span>
+</span></span><span style=display:flex><span>                },
+</span></span><span style=display:flex><span>                black <span style=color:#91d7e3;font-weight:700>=</span> { enabled <span style=color:#91d7e3;font-weight:700>=</span> <span style=color:#f5a97f>true</span> },
+</span></span><span style=display:flex><span>            },
+</span></span><span style=display:flex><span>        },
+</span></span><span style=display:flex><span>    },
+</span></span><span style=display:flex><span>})
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>lsp.enable({ <span style=color:#a6da95>&#34;lua_ls&#34;</span>, <span style=color:#a6da95>&#34;clangd&#34;</span>, <span style=color:#a6da95>&#34;pylsp&#34;</span> })
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>vim.diagnostic.config({
+</span></span><span style=display:flex><span>    virtual_lines <span style=color:#91d7e3;font-weight:700>=</span> {
+</span></span><span style=display:flex><span>        format <span style=color:#91d7e3;font-weight:700>=</span> <span style=color:#c6a0f6>function</span>(diagnostic)
+</span></span><span style=display:flex><span>            <span style=color:#6e738d;font-style:italic>-- Only show the message, hide the code</span>
+</span></span><span style=display:flex><span>            <span style=color:#c6a0f6>return</span> diagnostic.message
+</span></span><span style=display:flex><span>        <span style=color:#c6a0f6>end</span>,
+</span></span><span style=display:flex><span>    },
+</span></span><span style=display:flex><span>})
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>require(<span style=color:#a6da95>&#34;nvim-file-operations&#34;</span>).setup()
+</span></span><span style=display:flex><span>vim.lsp.config(<span style=color:#a6da95>&#34;*&#34;</span>, {
+</span></span><span style=display:flex><span>    capabilities <span style=color:#91d7e3;font-weight:700>=</span> require(<span style=color:#a6da95>&#34;nvim-file-operations.config&#34;</span>).default_capabilities(),
+</span></span><span style=display:flex><span>})</span></span></code></pre></div></div><h3 id=fzf-lua-a-file-picker>Fzf-Lua: A File Picker</h3><p>I installed <a href=https://github.com/ibhagwan/fzf-lua><code>fzf-lua</code></a> instead of Telescope for the speed. I then set it up with the commands I used the most in NvChad, namely finding files, finding in all files starting from home, finding recent files and <code>live_grep</code> to find words in files in the project.</p><div class=codeblock><div class=copy-button-box><button class=copy-button state=copy data=#ZgotmplZ>
+<i class="bi bi-copy"></i></button></div><div class=highlight><pre tabindex=0 style=color:#cad3f5;background-color:#24273a;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-lua data-lang=lua><span style=display:flex><span>vim.pack.add({ <span style=color:#a6da95>&#34;https://github.com/ibhagwan/fzf-lua&#34;</span> })
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#ed8796>local</span> fzf <span style=color:#91d7e3;font-weight:700>=</span> require(<span style=color:#a6da95>&#34;fzf-lua&#34;</span>)
+</span></span><span style=display:flex><span>fzf.setup({})
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#ed8796>local</span> opts <span style=color:#91d7e3;font-weight:700>=</span> <span style=color:#c6a0f6>function</span>(desc)
+</span></span><span style=display:flex><span>    <span style=color:#c6a0f6>return</span> { desc <span style=color:#91d7e3;font-weight:700>=</span> <span style=color:#a6da95>&#34;FZF: &#34;</span> <span style=color:#91d7e3;font-weight:700>..</span> desc }
+</span></span><span style=display:flex><span><span style=color:#c6a0f6>end</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#ed8796>local</span> map <span style=color:#91d7e3;font-weight:700>=</span> vim.keymap.set
+</span></span><span style=display:flex><span>map(<span style=color:#a6da95>&#34;n&#34;</span>, <span style=color:#a6da95>&#34;&lt;leader&gt;ff&#34;</span>, fzf.files, opts(<span style=color:#a6da95>&#34;Find files&#34;</span>))
+</span></span><span style=display:flex><span>map(<span style=color:#a6da95>&#34;n&#34;</span>, <span style=color:#a6da95>&#34;&lt;leader&gt;fa&#34;</span>, <span style=color:#c6a0f6>function</span>()
+</span></span><span style=display:flex><span>    fzf.files({ cwd <span style=color:#91d7e3;font-weight:700>=</span> <span style=color:#a6da95>&#34;~&#34;</span> })
+</span></span><span style=display:flex><span><span style=color:#c6a0f6>end</span>, opts(<span style=color:#a6da95>&#34;Find all files&#34;</span>))
+</span></span><span style=display:flex><span>map(<span style=color:#a6da95>&#34;n&#34;</span>, <span style=color:#a6da95>&#34;&lt;leader&gt;fo&#34;</span>, fzf.oldfiles, opts(<span style=color:#a6da95>&#34;Find recent files&#34;</span>))
+</span></span><span style=display:flex><span>map(<span style=color:#a6da95>&#34;n&#34;</span>, <span style=color:#a6da95>&#34;&lt;leader&gt;fw&#34;</span>, fzf.live_grep, opts(<span style=color:#a6da95>&#34;Live grep&#34;</span>))
+</span></span><span style=display:flex><span>map(<span style=color:#a6da95>&#34;n&#34;</span>, <span style=color:#a6da95>&#34;&lt;leader&gt;fk&#34;</span>, fzf.keymaps, opts(<span style=color:#a6da95>&#34;Find keymaps&#34;</span>))
+</span></span><span style=display:flex><span>map(<span style=color:#a6da95>&#34;n&#34;</span>, <span style=color:#a6da95>&#34;&lt;leader&gt;fb&#34;</span>, fzf.buffers, opts(<span style=color:#a6da95>&#34;Find buffers&#34;</span>))</span></span></code></pre></div></div><h3 id=blink-autocompletion>Blink: Autocompletion</h3><p>I used <a href=https://github.com/Saghen/blink.cmp><code>blink</code></a>, the newer, faster completion plugin, to have completion and snippets sourced from LSPs. I modified a bit the keymaps to my liking using enter to accept a completion and tab to move inside the list. Finally, I added the capabilities of blink to the LSPs.</p><div class=codeblock><div class=copy-button-box><button class=copy-button state=copy data=#ZgotmplZ>
+<i class="bi bi-copy"></i></button></div><div class=highlight><pre tabindex=0 style=color:#cad3f5;background-color:#24273a;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-lua data-lang=lua><span style=display:flex><span>vim.pack.add({ { src <span style=color:#91d7e3;font-weight:700>=</span> <span style=color:#a6da95>&#34;https://github.com/Saghen/blink.cmp&#34;</span>, version <span style=color:#91d7e3;font-weight:700>=</span> <span style=color:#a6da95>&#34;v1&#34;</span> } })
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#ed8796>local</span> blink <span style=color:#91d7e3;font-weight:700>=</span> require(<span style=color:#a6da95>&#34;blink.cmp&#34;</span>)
+</span></span><span style=display:flex><span>blink.setup({
+</span></span><span style=display:flex><span>    keymap <span style=color:#91d7e3;font-weight:700>=</span> {
+</span></span><span style=display:flex><span>        preset <span style=color:#91d7e3;font-weight:700>=</span> <span style=color:#a6da95>&#34;enter&#34;</span>,
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        [<span style=color:#a6da95>&#34;&lt;Tab&gt;&#34;</span>] <span style=color:#91d7e3;font-weight:700>=</span> { <span style=color:#a6da95>&#34;select_next&#34;</span>, <span style=color:#a6da95>&#34;snippet_forward&#34;</span>, <span style=color:#a6da95>&#34;fallback&#34;</span> },
+</span></span><span style=display:flex><span>        [<span style=color:#a6da95>&#34;&lt;S-Tab&gt;&#34;</span>] <span style=color:#91d7e3;font-weight:700>=</span> { <span style=color:#a6da95>&#34;select_prev&#34;</span>, <span style=color:#a6da95>&#34;snippet_backward&#34;</span>, <span style=color:#a6da95>&#34;fallback&#34;</span> },
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        [<span style=color:#a6da95>&#34;&lt;Up&gt;&#34;</span>] <span style=color:#91d7e3;font-weight:700>=</span> <span style=color:#f5a97f>false</span>,
+</span></span><span style=display:flex><span>        [<span style=color:#a6da95>&#34;&lt;Down&gt;&#34;</span>] <span style=color:#91d7e3;font-weight:700>=</span> <span style=color:#f5a97f>false</span>,
+</span></span><span style=display:flex><span>        [<span style=color:#a6da95>&#34;&lt;C-p&gt;&#34;</span>] <span style=color:#91d7e3;font-weight:700>=</span> <span style=color:#f5a97f>false</span>,
+</span></span><span style=display:flex><span>        [<span style=color:#a6da95>&#34;&lt;C-n&gt;&#34;</span>] <span style=color:#91d7e3;font-weight:700>=</span> <span style=color:#f5a97f>false</span>,
+</span></span><span style=display:flex><span>    },
+</span></span><span style=display:flex><span>    completion <span style=color:#91d7e3;font-weight:700>=</span> {
+</span></span><span style=display:flex><span>        list <span style=color:#91d7e3;font-weight:700>=</span> {
+</span></span><span style=display:flex><span>            selection <span style=color:#91d7e3;font-weight:700>=</span> { preselect <span style=color:#91d7e3;font-weight:700>=</span> <span style=color:#f5a97f>false</span>, auto_insert <span style=color:#91d7e3;font-weight:700>=</span> <span style=color:#f5a97f>true</span> },
+</span></span><span style=display:flex><span>        },
+</span></span><span style=display:flex><span>    },
+</span></span><span style=display:flex><span>})
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>vim.lsp.config(<span style=color:#a6da95>&#34;*&#34;</span>, {
+</span></span><span style=display:flex><span>  capabilities <span style=color:#91d7e3;font-weight:700>=</span> blink.get_lsp_capabilities(),
+</span></span><span style=display:flex><span>})</span></span></code></pre></div></div><h3 id=quality-of-life>Quality of Life</h3><p>For now, I added <a href=https://github.com/folke/which-key.nvim><code>which-key</code></a> as a bonus on top of the keymaps listing of <code>fzf-lua</code> to help me if I forget a combination. I then added <a href=https://github.com/windwp/nvim-autopairs><code>nvim-autopairs</code></a> to automatically close brackets and parentheses.</p><div class=codeblock><div class=copy-button-box><button class=copy-button state=copy data=#ZgotmplZ>
+<i class="bi bi-copy"></i></button></div><div class=highlight><pre tabindex=0 style=color:#cad3f5;background-color:#24273a;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-lua data-lang=lua><span style=display:flex><span>vim.pack.add({
+</span></span><span style=display:flex><span>    <span style=color:#a6da95>&#34;https://github.com/folke/which-key.nvim&#34;</span>,
+</span></span><span style=display:flex><span>    <span style=color:#a6da95>&#34;https://github.com/windwp/nvim-autopairs&#34;</span>,
+</span></span><span style=display:flex><span>})
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>require(<span style=color:#a6da95>&#34;which-key&#34;</span>).setup({ preset <span style=color:#91d7e3;font-weight:700>=</span> <span style=color:#a6da95>&#34;helix&#34;</span> })
+</span></span><span style=display:flex><span>require(<span style=color:#a6da95>&#34;nvim-autopairs&#34;</span>).setup({})</span></span></code></pre></div></div><h3 id=git-client>Git Client</h3><p>I added <a href=https://github.com/lewis6991/gitsigns.nvim><code>gitsigns</code></a> to show lines that have been changes in the buffers and added the <a href=https://github.com/kdheepak/lazygit.nvim><code>lazygit</code> nvim plugin</a> to toggle a floating Lazygit terminal. I&rsquo;m already used to Lazygit, but this plugins makes it so I can 1) use it in the same window and 2) open the files in conflicts inside the same Neovim instance.</p><div class=codeblock><div class=copy-button-box><button class=copy-button state=copy data=#ZgotmplZ>
+<i class="bi bi-copy"></i></button></div><div class=highlight><pre tabindex=0 style=color:#cad3f5;background-color:#24273a;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-lua data-lang=lua><span style=display:flex><span>vim.pack.add({
+</span></span><span style=display:flex><span>    <span style=color:#a6da95>&#34;https://github.com/lewis6991/gitsigns.nvim&#34;</span>,
+</span></span><span style=display:flex><span>    <span style=color:#a6da95>&#34;https://github.com/kdheepak/lazygit.nvim&#34;</span>,
+</span></span><span style=display:flex><span>})
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>vim.keymap.set(<span style=color:#a6da95>&#34;n&#34;</span>, <span style=color:#a6da95>&#34;&lt;leader&gt;g&#34;</span>, <span style=color:#a6da95>&#34;&lt;cmd&gt;LazyGit&lt;cr&gt;&#34;</span>, { desc <span style=color:#91d7e3;font-weight:700>=</span> <span style=color:#a6da95>&#34;Open Lazygit&#34;</span> })</span></span></code></pre></div></div><h3 id=keymaps>Keymaps</h3><p>Finally, here are some general keymaps I like. They are taken directly from NvChad.</p><div class=codeblock><div class=copy-button-box><button class=copy-button state=copy data="local%20map%20=%20vim.keymap.set%0a%0amap%28%22n%22,%20%22%3cEsc%3e%22,%20%22%3ccmd%3enoh%3cCR%3e%22,%20%7b%20silent%20=%20true,%20desc%20=%20%22Clear%20highlights%22%20%7d%29%0a%0a--%20Moving%20in%20insert%20mode%0amap%28%22i%22,%20%22%3cC-b%3e%22,%20%22%3cESC%3e%5ei%22,%20%7b%20desc%20=%20%22Move%20beginning%20of%20line%22%20%7d%29%0amap%28%22i%22,%20%22%3cC-e%3e%22,%20%22%3cEnd%3e%22,%20%7b%20desc%20=%20%22Move%20end%20of%20line%22%20%7d%29%0amap%28%22i%22,%20%22%3cC-h%3e%22,%20%22%3cLeft%3e%22,%20%7b%20desc%20=%20%22Move%20left%22%20%7d%29%0amap%28%22i%22,%20%22%3cC-l%3e%22,%20%22%3cRight%3e%22,%20%7b%20desc%20=%20%22Move%20right%22%20%7d%29%0amap%28%22i%22,%20%22%3cC-j%3e%22,%20%22%3cDown%3e%22,%20%7b%20desc%20=%20%22Move%20down%22%20%7d%29%0amap%28%22i%22,%20%22%3cC-k%3e%22,%20%22%3cUp%3e%22,%20%7b%20desc%20=%20%22Move%20up%22%20%7d%29%0a%0a--%20Moving%20in%20panes%0amap%28%22n%22,%20%22%3cC-h%3e%22,%20%22%3cC-w%3eh%22,%20%7b%20desc%20=%20%22Switch%20pane%20left%22%20%7d%29%0amap%28%22n%22,%20%22%3cC-l%3e%22,%20%22%3cC-w%3el%22,%20%7b%20desc%20=%20%22Switch%20pane%20right%22%20%7d%29%0amap%28%22n%22,%20%22%3cC-j%3e%22,%20%22%3cC-w%3ej%22,%20%7b%20desc%20=%20%22Switch%20pane%20down%22%20%7d%29%0amap%28%22n%22,%20%22%3cC-k%3e%22,%20%22%3cC-w%3ek%22,%20%7b%20desc%20=%20%22Switch%20pane%20up%22%20%7d%29%0a%0a--%20Comments%0amap%28%22n%22,%20%22%3cleader%3e/%22,%20%22gcc%22,%20%7b%20desc%20=%20%22toggle%20comment%22,%20remap%20=%20true%20%7d%29%0amap%28%22v%22,%20%22%3cleader%3e/%22,%20%22gc%22,%20%7b%20desc%20=%20%22toggle%20comment%22,%20remap%20=%20true%20%7d%29">
+<i class="bi bi-copy"></i></button></div><div class=highlight><pre tabindex=0 style=color:#cad3f5;background-color:#24273a;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-lua data-lang=lua><span style=display:flex><span><span style=color:#ed8796>local</span> map <span style=color:#91d7e3;font-weight:700>=</span> vim.keymap.set
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>map(<span style=color:#a6da95>&#34;n&#34;</span>, <span style=color:#a6da95>&#34;&lt;Esc&gt;&#34;</span>, <span style=color:#a6da95>&#34;&lt;cmd&gt;noh&lt;CR&gt;&#34;</span>, { silent <span style=color:#91d7e3;font-weight:700>=</span> <span style=color:#f5a97f>true</span>, desc <span style=color:#91d7e3;font-weight:700>=</span> <span style=color:#a6da95>&#34;Clear highlights&#34;</span> })
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#6e738d;font-style:italic>-- Moving in insert mode</span>
+</span></span><span style=display:flex><span>map(<span style=color:#a6da95>&#34;i&#34;</span>, <span style=color:#a6da95>&#34;&lt;C-b&gt;&#34;</span>, <span style=color:#a6da95>&#34;&lt;ESC&gt;^i&#34;</span>, { desc <span style=color:#91d7e3;font-weight:700>=</span> <span style=color:#a6da95>&#34;Move beginning of line&#34;</span> })
+</span></span><span style=display:flex><span>map(<span style=color:#a6da95>&#34;i&#34;</span>, <span style=color:#a6da95>&#34;&lt;C-e&gt;&#34;</span>, <span style=color:#a6da95>&#34;&lt;End&gt;&#34;</span>, { desc <span style=color:#91d7e3;font-weight:700>=</span> <span style=color:#a6da95>&#34;Move end of line&#34;</span> })
+</span></span><span style=display:flex><span>map(<span style=color:#a6da95>&#34;i&#34;</span>, <span style=color:#a6da95>&#34;&lt;C-h&gt;&#34;</span>, <span style=color:#a6da95>&#34;&lt;Left&gt;&#34;</span>, { desc <span style=color:#91d7e3;font-weight:700>=</span> <span style=color:#a6da95>&#34;Move left&#34;</span> })
+</span></span><span style=display:flex><span>map(<span style=color:#a6da95>&#34;i&#34;</span>, <span style=color:#a6da95>&#34;&lt;C-l&gt;&#34;</span>, <span style=color:#a6da95>&#34;&lt;Right&gt;&#34;</span>, { desc <span style=color:#91d7e3;font-weight:700>=</span> <span style=color:#a6da95>&#34;Move right&#34;</span> })
+</span></span><span style=display:flex><span>map(<span style=color:#a6da95>&#34;i&#34;</span>, <span style=color:#a6da95>&#34;&lt;C-j&gt;&#34;</span>, <span style=color:#a6da95>&#34;&lt;Down&gt;&#34;</span>, { desc <span style=color:#91d7e3;font-weight:700>=</span> <span style=color:#a6da95>&#34;Move down&#34;</span> })
+</span></span><span style=display:flex><span>map(<span style=color:#a6da95>&#34;i&#34;</span>, <span style=color:#a6da95>&#34;&lt;C-k&gt;&#34;</span>, <span style=color:#a6da95>&#34;&lt;Up&gt;&#34;</span>, { desc <span style=color:#91d7e3;font-weight:700>=</span> <span style=color:#a6da95>&#34;Move up&#34;</span> })
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#6e738d;font-style:italic>-- Moving in panes</span>
+</span></span><span style=display:flex><span>map(<span style=color:#a6da95>&#34;n&#34;</span>, <span style=color:#a6da95>&#34;&lt;C-h&gt;&#34;</span>, <span style=color:#a6da95>&#34;&lt;C-w&gt;h&#34;</span>, { desc <span style=color:#91d7e3;font-weight:700>=</span> <span style=color:#a6da95>&#34;Switch pane left&#34;</span> })
+</span></span><span style=display:flex><span>map(<span style=color:#a6da95>&#34;n&#34;</span>, <span style=color:#a6da95>&#34;&lt;C-l&gt;&#34;</span>, <span style=color:#a6da95>&#34;&lt;C-w&gt;l&#34;</span>, { desc <span style=color:#91d7e3;font-weight:700>=</span> <span style=color:#a6da95>&#34;Switch pane right&#34;</span> })
+</span></span><span style=display:flex><span>map(<span style=color:#a6da95>&#34;n&#34;</span>, <span style=color:#a6da95>&#34;&lt;C-j&gt;&#34;</span>, <span style=color:#a6da95>&#34;&lt;C-w&gt;j&#34;</span>, { desc <span style=color:#91d7e3;font-weight:700>=</span> <span style=color:#a6da95>&#34;Switch pane down&#34;</span> })
+</span></span><span style=display:flex><span>map(<span style=color:#a6da95>&#34;n&#34;</span>, <span style=color:#a6da95>&#34;&lt;C-k&gt;&#34;</span>, <span style=color:#a6da95>&#34;&lt;C-w&gt;k&#34;</span>, { desc <span style=color:#91d7e3;font-weight:700>=</span> <span style=color:#a6da95>&#34;Switch pane up&#34;</span> })
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#6e738d;font-style:italic>-- Comments</span>
+</span></span><span style=display:flex><span>map(<span style=color:#a6da95>&#34;n&#34;</span>, <span style=color:#a6da95>&#34;&lt;leader&gt;/&#34;</span>, <span style=color:#a6da95>&#34;gcc&#34;</span>, { desc <span style=color:#91d7e3;font-weight:700>=</span> <span style=color:#a6da95>&#34;toggle comment&#34;</span>, remap <span style=color:#91d7e3;font-weight:700>=</span> <span style=color:#f5a97f>true</span> })
+</span></span><span style=display:flex><span>map(<span style=color:#a6da95>&#34;v&#34;</span>, <span style=color:#a6da95>&#34;&lt;leader&gt;/&#34;</span>, <span style=color:#a6da95>&#34;gc&#34;</span>, { desc <span style=color:#91d7e3;font-weight:700>=</span> <span style=color:#a6da95>&#34;toggle comment&#34;</span>, remap <span style=color:#91d7e3;font-weight:700>=</span> <span style=color:#f5a97f>true</span> })</span></span></code></pre></div></div><h1 id=conclusion>Conclusion</h1><p>This rewrite of my config allowed me to have a clean and minimal configuration of my Neovim and learn a bit more about the new features of the 0.12+ version. Everything else I&rsquo;ll add will be in my dotfiles but not detailed here, things like vimtex and other plugins I land on in my researchs.</p></div></article></main><footer class="footer lualine"><div class="ll-side ll-left"><a class="ll-seg ll-mode" href=/>Jérémy Dumas</a><nav class="ll-seg ll-crumbs" aria-label=breadcrumb><a href=/projects/>Projects</a><span class=ll-sep>/</span>
+<span class=ll-current>Moving from NvChad to Native Neovim 0.12</span></nav><a class="ll-seg ll-icon" href=https://github.com/j-dumas target=_blank rel=noopener aria-label=GitHub><i class=bi-github>github.com/j-dumas</i></a></div><div class="ll-side ll-right"><a class="ll-seg ll-icon" href=https://github.com/JingWangTW/dark-theme-editor target=_blank rel=noopener><i class=bi-git></i> Theme: dark-theme-editor
+</a><span class="ll-seg ll-mode"><i class=bi-c-circle></i> 2026</span></div></footer></body><script type=text/javascript src=/js/index_d751713.min.5eeb120f16ea146352725c420364f87befead45f678142b8f0ffbef024646931fbc06bff07a7bd6cb57fa2f8cd8a21ba6a4ee5a278ec32303a378bc1cd17f246.js integrity="sha512-XusSDxbqFGNSclxCA2T4e+/q1F9ngUK48P++8CRkaTH7wGv/B6e9bLV/ovjNiiG6ak7lonjsMjA6N4vBzRfyRg=="></script><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css></html>
