@@ -1,0 +1,58 @@
+article.main > div.content table {
+    display: block;              /* keeps the theme's horizontal scroll */
+    box-sizing: border-box;
+    width: fit-content;          /* shrink to content so it can be centered */
+    max-width: 100%;
+    overflow: auto;
+    margin: 16pt auto;           /* centered */
+    border: 1px solid var(--surface1);
+    border-radius: 12px;         /* overflow clips the contents to this */
+    border-collapse: collapse;
+    background: var(--base);
+    color: var(--text);
+}
+
+article.main > div.content :where(h1, h2, h3, h4, h5, h6) + table {
+    margin-top: 0;
+}
+
+/* Remove the theme's row borders, we use cell borders instead */
+article.main > div.content table tr {
+    border-bottom: none;
+}
+
+/* Header */
+article.main > div.content table > thead > tr:last-child {
+    border-bottom: none;         /* removes the theme's double border */
+}
+
+article.main > div.content table th {
+    font-weight: 600;
+    font-size: 106%;
+    text-align: left;
+    background: var(--mantle);
+    color: var(--teal);
+    border-bottom: 2px solid var(--surface1);
+}
+
+article.main > div.content table :where(th, td) {
+    padding: 0.8em 1.4em;
+}
+
+/* Body cells */
+article.main > div.content table td {
+    border-bottom: 1px solid var(--surface0);
+}
+
+article.main > div.content table > tbody > tr:last-child td {
+    border-bottom: none;
+}
+
+article.main > div.content table strong {
+    color: var(--peach);
+}
+
+/* Remove the theme's zebra striping */
+article.main > div.content table > tbody > tr:nth-child(2n) {
+    background-color: transparent;
+}
