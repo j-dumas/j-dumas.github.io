@@ -6,8 +6,15 @@
 
         <hr />
 
+        <div class="content">
+            {{ if .Content }}
+                {{ .Content }}
+            {{ end }}
+        </div>
+
+
         <div class="list-files">
-            {{ partial "module/section_tree" ( dict "context" . "currentPage" . ) }}
+            {{ partial "module/section_tree" ( dict "context" . "currentPage" . "showSummary" true ) }}
         </div>
     </article>
 {{ end }}

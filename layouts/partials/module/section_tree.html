@@ -1,5 +1,6 @@
 {{ $context := .context }}
 {{ $currentPage := .currentPage }}
+{{ $showSummary := or .showSummary false }}
 
 {{ with $context }}
     {{ $page_children := where ( union .Sections .Pages ) "Kind" "page" }}
@@ -37,8 +38,7 @@
     {{/* show page child first than section child */}}
     {{ $children := $section_children | append $page_children }}
 
-
-    <ul class="section-tree">
+    <ul class="section-tree{{ if $showSummary }} with-summary{{ end }}">
         {{ range $children }}
             {{ if .IsNode }}
                 <li
@@ -50,7 +50,13 @@
                     <span class="dir-text dir-toggle" aria-label="Toggle section"></span>
                     <a class="dir-link" href="{{ .RelPermalink }}">{{ .Title }}</a>
 
-                    {{ partial "module/section_tree" ( dict "context" . "currentPage" $currentPage ) }}
+                    {{ if $showSummary }}
+                        {{ with or .Description .Summary }}
+                            <p class="item-summary">{{ . | plainify | truncate 200 }}</p>
+                        {{ end }}
+                    {{ end }}
+
+                    {{ partial "module/section_tree" ( dict "context" . "currentPage" $currentPage "showSummary" $showSummary ) }}
                 </li>
             {{ else }}
                 <li class="file">
@@ -61,6 +67,12 @@
                             {{ .Title }}
                         {{ end }}
                     </a>
+
+                    {{ if $showSummary }}
+                        {{ with or .Description .Summary }}
+                            <p class="item-summary">{{ . | plainify }}</p>
+                        {{ end }}
+                    {{ end }}
                 </li>
             {{ end }}
         {{ end }}
