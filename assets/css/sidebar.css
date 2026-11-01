@@ -3,14 +3,6 @@ aside.sidebar {
     --row-gap: 0.25rem; /* increase for more air */
 }
 
-aside.exapandable {
-    background-color: var(--surface0);
-}
-
-aside.exapandable:hover {
-    background-color: var(--surface1);
-}
-
 /* ---------- Layout: tree on top, outline below, equal height ---------- */
 aside.sidebar > .sidebar-inner {
     display: flex;
@@ -35,7 +27,7 @@ aside.sidebar .sidebar-inner > ul.section-tree {
 aside.sidebar .tree-title {
     margin: 0;
     padding: 1rem 1rem 0;
-    color: var(--subtitle);
+    color: var(--peach);
     font-size: 1rem;
     font-weight: 700;
     letter-spacing: 0.05em;
@@ -51,7 +43,7 @@ aside.sidebar .sidebar-outline {
 
 aside.sidebar .sidebar-outline .outline-title {
     margin-bottom: 0.4rem;
-    color: var(--subtitle);
+    color: var(--peach);
     font-size: 1rem;
     font-weight: 700;
     letter-spacing: 0.05em;
@@ -117,4 +109,11 @@ ul.section-tree li.dir > a.dir-link:visited {
 
 ul.section-tree li.dir > a.dir-link:hover {
     color: var(--text);
+}
+
+/* ---------- Tree ---------- */
+.section-tree .item-summary {
+    margin: 0.1rem 0 0.5rem 1.5rem;
+    font-size: 0.85em;
+    opacity: 0.75;
 }

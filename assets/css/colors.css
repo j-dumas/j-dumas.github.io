@@ -28,10 +28,10 @@
     --crust: #11111b;
 
     /* Semantic roles */
-    --title: var(--blue);
-    --subtitle: var(--green);
     --link: var(--mauve);
     --link-hover: var(--pink);
+    --title: var(--green);
+    --subtitle: var(--blue);
     --muted: var(--subtext0);
     --border: var(--surface1);
 }
@@ -125,11 +125,11 @@ article.main > div.list-terms > ul > li:hover {
 }
 
 /* ---------- Sidebar ---------- */
-aside.exapandable {
+aside.expandable {
     background-color: var(--surface0);
 }
 
-aside.exapandable:hover {
+aside.expandable:hover {
     background-color: var(--surface1);
 }
 
@@ -140,7 +140,8 @@ ul.section-tree > li:is(.dir, .file) {
 
 article.main > div.list-files > ul.section-tree > li.file:hover,
 ul.section-tree > li > a:hover,
-ul.section-tree > li.dir > span.dir-text:hover {
+ul.section-tree > li.dir > span.dir-text:hover,
+nav#TableOfContents ul > li > a:hover {
     color: var(--text) !important;
 }
 
@@ -185,16 +186,20 @@ article.main > div.content :where(h1, h2) {
     border-bottom-color: var(--border);
 }
 
-article.main > div.content :is(h1, h2) {
-    color: var(--title);
-}
-
-article.main > div.content :is(h3, h4, h5, h6) {
+article.main > div.content :is(h2) {
     color: var(--subtitle);
 }
 
+article.main > div.content :is(h3) {
+    color: var(--sapphire);
+}
+
+article.main > div.content :is(h4, h5, h6) {
+    color: var(--lavender);
+}
+
 article.main > div.content strong {
-    color: var(--rosewater);
+    color: var(--maroon);
 }
 
 article.main > div.content hr {
