@@ -1,0 +1,12 @@
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* the block that holds the sidebar + main (the element right before the footer) */
+body > :not(footer):not(header) {
+    flex: 1 1 auto;
+    height: auto;          /* cancel fixed heights from the theme */
+    min-height: 0;
+}
