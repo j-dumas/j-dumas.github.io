@@ -1,0 +1,18 @@
+{{ $solved := where .RegularPages "Params.solved" "eq" true }}
+{{ $unsolved := complement $solved .RegularPages }}
+
+<div class="category-tree">
+    {{ with $solved }}
+        <section class="status solved">
+            <h2 class="status-title">Solved</h2>
+            {{ partial "module/section_tree_category" . }}
+        </section>
+    {{ end }}
+
+    {{ with $unsolved }}
+        <section class="status unsolved">
+            <h2 class="status-title">Unsolved</h2>
+            {{ partial "module/section_tree_category" . }}
+        </section>
+    {{ end }}
+</div>

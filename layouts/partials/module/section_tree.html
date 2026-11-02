@@ -59,21 +59,7 @@
                     {{ partial "module/section_tree" ( dict "context" . "currentPage" $currentPage "showSummary" $showSummary ) }}
                 </li>
             {{ else }}
-                <li class="file">
-                    <a href="{{ .Permalink }}" title=".{{ .RelPermalink }}">
-                        {{ if .Site.Params.preference.showFileName }}
-                            {{ .File.TranslationBaseName }}.{{ .File.Ext }}
-                        {{ else }}
-                            {{ .Title }}
-                        {{ end }}
-                    </a>
-
-                    {{ if $showSummary }}
-                        {{ with or .Description .Summary }}
-                            <p class="item-summary">{{ . | plainify }}</p>
-                        {{ end }}
-                    {{ end }}
-                </li>
+                {{ partial "module/section_tree_file" (dict "page" . "showSummary" $showSummary) }}
             {{ end }}
         {{ end }}
     </ul>

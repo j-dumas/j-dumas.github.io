@@ -1,0 +1,18 @@
+{{ $showSummary := or .showSummary false }}
+{{ with .page }}
+    <li class="file">
+        <a href="{{ .Permalink }}" title=".{{ .RelPermalink }}">
+            {{ if .Site.Params.preference.showFileName }}
+                {{ .File.TranslationBaseName }}.{{ .File.Ext }}
+            {{ else }}
+                {{ .Title }}
+            {{ end }}
+        </a>
+
+        {{ if $showSummary }}
+            {{ with or .Description .Summary }}
+                <p class="item-summary">{{ . | plainify }}</p>
+            {{ end }}
+        {{ end }}
+    </li>
+{{ end }}

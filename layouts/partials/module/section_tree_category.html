@@ -1,0 +1,22 @@
+{{ range .GroupByParam "category" }}
+    <section class="category">
+        <h3 class="category-title">{{ .Key | title }}</h3>
+        <ul class="section-tree with-summary">
+            {{ range .Pages.ByTitle }}
+                {{ partial "module/section_tree_file" (dict "page" . "showSummary" true) }}
+            {{ end }}
+        </ul>
+    </section>
+{{ end }}
+
+{{ $uncategorized := where . "Params.category" "eq" nil }}
+{{ if $uncategorized }}
+    <section class="category uncategorized">
+        <h3 class="category-title">Uncategorized</h3>
+        <ul class="section-tree with-summary">
+            {{ range $uncategorized.ByTitle }}
+                {{ partial "module/section_tree_file" (dict "page" . "showSummary" true) }}
+            {{ end }}
+        </ul>
+    </section>
+{{ end }}
