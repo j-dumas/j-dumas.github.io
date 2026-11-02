@@ -11,7 +11,7 @@
 
         {{ if $showSummary }}
             {{ with or .Description .Summary }}
-                <p class="item-summary">{{ . | plainify }}</p>
+                <p class="item-summary">{{ . | plainify | markdownify }}</p>
             {{ end }}
         {{ end }}
     </li>
