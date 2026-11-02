@@ -5,7 +5,7 @@ theme = 'editor'
 
 [params]
     [params.globalFrontMatter]
-        localCss = ["css/colors.css", "css/alerts.css", "css/footer.css", "css/sidebar.css", "css/home.css", "css/tables.css", "css/body.css"]
+        localCss = ["css/*"]
     [params.header]
         title = "Jérémy Dumas"
     [params.footer]
