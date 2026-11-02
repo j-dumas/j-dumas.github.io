@@ -117,3 +117,12 @@ ul.section-tree li.dir > a.dir-link:hover {
     font-size: 0.85em;
     opacity: 0.75;
 }
+
+ul.section-tree > li.file::before {
+    content: "\276F";
+    color: var(--overlay0, #6c7086);
+    font-size: 0.7em;
+    line-height: 1;
+    position: relative;
+    top: -0.5em;
+}
