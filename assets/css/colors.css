@@ -234,11 +234,15 @@ article.main > div.content table > tbody > tr:nth-child(2n) {
 
 /* Code */
 article.main > div.content code:not(div.highlight code) {
-    background-color: var(--surface1);
+    background-color: var(--surface0);
 }
 
 article.main > div.content pre:not(div.highlight pre) {
     background-color: var(--mantle);
+}
+
+article.main > div.content div.highlight pre.chroma {
+    background-color: var(--surface0);
 }
 
 /* Copy button */
