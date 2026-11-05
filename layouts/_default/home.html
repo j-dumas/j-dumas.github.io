@@ -13,13 +13,24 @@
         <div class="content">
             {{ .Content }}
         </div>
+
+        <div class="home-cards">
+            {{ range $.Params.cards }}
+                <a class="home-card {{ .accent }} {{ if .featured }}featured{{ end }}" href="{{ .link }}">
+                    <div class="home-card-content">
+                        <h2>{{ .title }}</h2>
+                        <p>{{ .description }}</p>
+                    </div>
+
+                    <span class="home-card-arrow">↗</span>
+                </a>
+            {{ end }}
+        </div>
+
         <p align="center">
           <a href="https://skillicons.dev">
             <img src="https://skillicons.dev/icons?i=c,cpp,zig,python,neovim,linux,latex&perline=8" />
           </a>
         </p>
-
-        {{/* Cards for linked pages go here later */}}
-        {{/* <div class="home-cards"></div> */}}
     </article>
 {{ end }}

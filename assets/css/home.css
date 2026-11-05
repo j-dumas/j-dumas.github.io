@@ -34,3 +34,98 @@ article.main > div.home > div.title > h2.subtitle {
     white-space: normal;
     color: var(--subtitle);
 }
+
+
+/* ---------- Cards ---------- */
+/* Card grid */
+article.main > div.home-cards {
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: 12px;
+    margin: 28px 0;
+}
+
+/* Base card */
+article.main > div.home-cards > a.home-card {
+    grid-column: span 2;
+    display: flex;
+    align-items: center;
+    position: relative;
+    gap: 12px;
+    min-width: 0;
+    min-height: 110px;
+    padding: 18px;
+    border-radius: 8px;
+    text-decoration: none;
+    transition:
+        border-color 0.2s ease,
+        transform 0.2s ease;
+}
+
+article.main > div.home-cards > a.home-card:hover {
+    transform: translateY(-2px);
+    text-decoration: none;
+}
+
+/* Featured cards */
+article.main > div.home-cards > a.home-card.featured {
+    grid-column: span 3;
+    min-height: 140px;
+}
+
+/* Center the two featured cards */
+article.main > div.home-cards > a.home-card.featured:nth-child(1) {
+    grid-column: 2 / span 2;
+}
+
+article.main > div.home-cards > a.home-card.featured:nth-child(2) {
+    grid-column: 4 / span 2;
+}
+
+/* Card content */
+article.main .home-card-content {
+    min-width: 0;
+}
+
+article.main .home-card h2 {
+    margin: 0;
+    padding: 0;
+    border: none;
+    font-size: 1.6em;
+    line-height: 1.4;
+}
+
+article.main .home-card p {
+    margin: 4px 0 0;
+    font-size: 0.8em;
+    line-height: 1.4;
+    text-align: left;
+}
+
+/* Top-right arrow */
+article.main .home-card-arrow {
+    position: absolute;
+    top: 10px;
+    right: 12px;
+}
+
+/* Tablet layout */
+@media (max-width: 1000px) {
+    article.main > div.home-cards {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    article.main > div.home-cards > a.home-card,
+    article.main > div.home-cards > a.home-card.featured,
+    article.main > div.home-cards > a.home-card.featured:nth-child(1),
+    article.main > div.home-cards > a.home-card.featured:nth-child(2) {
+        grid-column: auto;
+    }
+}
+
+/* Mobile layout */
+@media (max-width: 600px) {
+    article.main > div.home-cards {
+        grid-template-columns: 1fr;
+    }
+}

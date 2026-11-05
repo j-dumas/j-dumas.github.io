@@ -158,17 +158,54 @@ article.main > div.home > div.recommend > div.left > div.start > p.long-descript
     color: var(--text);
 }
 
-/* Recent posts */
-article.main > div.home > div.recommend > div.left > div.recent > ul.recent-posts-list > li {
-    color: var(--link);
+/* Cards */
+article.main > div.home-cards > a.home-card {
+    background: var(--surface0);
+    border: 1px solid var(--surface1);
 }
 
-article.main > div.home > div.recommend > div.left > div.recent > ul.recent-posts-list > li:hover {
-    color: var(--text);
+article.main .home-card h2 {
+    color: var(--blue);
 }
 
-article.main > div.home > div.recommend > div.left > div.recent > ul.recent-posts-list > li > span.recent-posts-items-path {
+article.main .home-card p {
     color: var(--subtext1);
+}
+
+article.main .home-card-arrow {
+    color: var(--subtext0);
+}
+
+article.main .home-card.blue h2 {
+    color: var(--blue);
+}
+
+article.main .home-card.blue:hover {
+    border-color: var(--blue);
+}
+
+article.main .home-card.green h2 {
+    color: var(--green);
+}
+
+article.main .home-card.green:hover {
+    border-color: var(--green);
+}
+
+article.main .home-card.purple h2 {
+    color: var(--mauve);
+}
+
+article.main .home-card.purple:hover {
+    border-color: var(--mauve);
+}
+
+article.main .home-card.red h2 {
+    color: var(--red);
+}
+
+article.main .home-card.red:hover {
+    border-color: var(--red);
 }
 
 /* Section tree in walkthroughs */
