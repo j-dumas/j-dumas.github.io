@@ -280,3 +280,15 @@ This one required a password and not a public key, but after trying the password
 6. **Visit `/admin`** from the link added with line 14 to 16 of the javascript code on the dashboard
     
     This returned the flag on the `/admin` page.
+
+## Takeaways
+
+### Vulnerability
+
+- Key rotation without revocation of the old key defeats the whole point of rotating.
+- The `kid` header can be used in an attack, it's not just metadata.
+
+### Methodology
+
+- Always check FTP servers when open.
+- A comment with a `VULN` isn't always the intended path.
