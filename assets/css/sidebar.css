@@ -3,30 +3,46 @@ aside.sidebar {
     --row-gap: 0.25rem; /* increase for more air */
 }
 
-/* ---------- Layout: tree on top, outline below, equal height ---------- */
+/* ---------- Layout: tree on top (2/3), outline below (1/3) ---------- */
 aside.sidebar > .sidebar-inner {
     display: flex;
     flex-direction: column;
     height: 100%;
+    min-height: 0;
     /* If the sidebar has no definite height, use this instead:
        height: calc(100vh - 4rem); */
 }
 
-aside.sidebar .sidebar-inner > ul.section-tree,
-aside.sidebar .sidebar-inner > .sidebar-outline {
-    flex: 1 1 0;
+/* Both panels: column with fixed title + scrolling body */
+aside.sidebar .sidebar-tree,
+aside.sidebar .sidebar-outline {
+    display: flex;
+    flex-direction: column;
+    min-height: 0; /* lets flex children shrink so overflow works */
+}
+
+aside.sidebar .sidebar-tree    { flex: 2 1 0; }
+aside.sidebar .sidebar-outline { flex: 1 1 0; }
+
+/* Only the body scrolls */
+aside.sidebar .scroll-body {
+    flex: 1 1 auto;
     min-height: 0;
     overflow-y: auto;
 }
 
-aside.sidebar .sidebar-inner > ul.section-tree {
+/* Reset theme defaults on the tree list inside the scroll body */
+aside.sidebar .sidebar-tree .scroll-body > ul.section-tree {
     height: auto;
-    margin-bottom: 0;
+    margin: 0;
 }
 
-aside.sidebar .tree-title {
+/* Titles stay put */
+aside.sidebar .tree-title,
+aside.sidebar .outline-title {
+    flex: 0 0 auto;
     margin: 0;
-    padding: 1rem 1rem 0;
+    padding: 1rem 1rem 0.4rem;
     color: var(--peach);
     font-size: 1rem;
     font-weight: 700;
@@ -36,18 +52,11 @@ aside.sidebar .tree-title {
 
 /* ---------- Outline (TOC) ---------- */
 aside.sidebar .sidebar-outline {
-    margin-top: 0;
-    padding: 1rem 1rem 0;
     border-top: 1px solid var(--surface1);
 }
 
-aside.sidebar .sidebar-outline .outline-title {
-    margin-bottom: 0.4rem;
-    color: var(--peach);
-    font-size: 1rem;
-    font-weight: 700;
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
+aside.sidebar .sidebar-outline .scroll-body {
+    padding: 0 1rem;
 }
 
 aside.sidebar .sidebar-outline ul {
@@ -56,7 +65,7 @@ aside.sidebar .sidebar-outline ul {
     list-style: none;
 }
 
-aside.sidebar .sidebar-outline > nav > ul {
+aside.sidebar .sidebar-outline .scroll-body > nav > ul {
     padding-left: 0;
 }
 
@@ -80,6 +89,8 @@ aside.sidebar .sidebar-outline li > a {
     padding-top: var(--row-gap);
     padding-bottom: var(--row-gap);
 }
+
+/* ---------- Tree ---------- */
 
 /* Hide the theme's arrow */
 ul.section-tree > li:is(.closed-dir, .opened-dir)::before {
@@ -111,7 +122,6 @@ ul.section-tree li.dir > a.dir-link:hover {
     color: var(--text);
 }
 
-/* ---------- Tree ---------- */
 .section-tree .item-summary {
     margin: 0.1rem 0 0.5rem 1.5rem;
     font-size: 0.85em;

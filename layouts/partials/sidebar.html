@@ -7,13 +7,19 @@
 
 <aside class="sidebar">
     <div class="sidebar-inner">
-        <div class="tree-title">Tree Viewer</div>
-        {{ partial "module/section_tree" ( dict "context" .Site.Home "currentPage" . ) }}
+        <div class="sidebar-tree">
+            <div class="tree-title">Tree Viewer</div>
+            <div class="scroll-body">
+                {{ partial "module/section_tree" ( dict "context" .Site.Home "currentPage" . ) }}
+            </div>
+        </div>
 
         {{ if and .IsPage $showToc (gt (len .Fragments.Headings) 0) }}
             <div class="sidebar-outline">
                 <div class="outline-title">Table of Content</div>
-                {{ .TableOfContents }}
+                <div class="scroll-body">
+                    {{ .TableOfContents }}
+                </div>
             </div>
         {{ end }}
     </div>
