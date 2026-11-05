@@ -45,12 +45,12 @@ article.main > div.content details.alert > :last-child {
 /* Alert colors */
 article.main > div.content blockquote.alert-tip,
 article.main > div.content details.alert-tip {
-    --alert-color: var(--green);
+    --alert-color: var(--mauve);
 }
 
 article.main > div.content blockquote.alert-important,
 article.main > div.content details.alert-important {
-    --alert-color: var(--mauve);
+    --alert-color: var(--green);
 }
 
 article.main > div.content blockquote.alert-warning,
