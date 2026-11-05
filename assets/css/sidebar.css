@@ -16,6 +16,7 @@ aside.sidebar > .sidebar-inner {
 /* Both panels: column with fixed title + scrolling body */
 aside.sidebar .sidebar-tree,
 aside.sidebar .sidebar-outline {
+    margin-bottom: 1em;
     display: flex;
     flex-direction: column;
     min-height: 0; /* lets flex children shrink so overflow works */
