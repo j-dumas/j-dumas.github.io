@@ -153,7 +153,7 @@ PORT     STATE    SERVICE    VERSION
 
 As clearly indicated by the backup file and hinted by the `filtered` state of the port, the database was only accessible locally.
 I realized this after running 
-```console
+```console { class="no-linenos" }
 $ psql -h TARGET_IP -p 5432 -U hr_admin -d hr_portal -W
 ```
 to try to connect to the database with no success.
