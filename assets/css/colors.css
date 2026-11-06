@@ -124,6 +124,10 @@ article.main > div.list-terms > ul > li:hover {
     color: var(--text);
 }
 
+article.main > div.content ol > li::marker {
+    color: var(--sapphire);
+}
+
 /* ---------- Sidebar ---------- */
 aside.exapandable {
     background-color: var(--surface0);
