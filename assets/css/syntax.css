@@ -85,3 +85,7 @@
 
 article.main > div.content .chroma .gp { color:#a6e3a1; user-select:none; } /* prompt: green */
 article.main > div.content .chroma .go { color:#a6adc8; }                   /* output: subtext0 */
+
+article.main > div.content div.no-linenos span.ln {
+    visibility: hidden
+}

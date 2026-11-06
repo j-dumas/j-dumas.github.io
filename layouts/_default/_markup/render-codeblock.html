@@ -15,7 +15,7 @@
     {{ $copyText = delimit $stripped "\n" }}
 {{ end }}
 
-<div class="codeblock">
+<div class="codeblock {{ $class }}">
     {{ with $.Page.Site.Params.page.codeBlockCopible }}
         <div class="copy-button-box">
             <button class="copy-button" state="copy" data="{{ $copyText }}">
