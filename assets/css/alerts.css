@@ -23,6 +23,10 @@ article.main > div.content details.alert[open] > summary.alert-heading {
     margin-bottom: 0.4rem;
 }
 
+:is(blockquote, details) + :is(blockquote, details) {
+    margin-top: 1rem;
+}
+
 /* Regular alert heading */
 article.main > div.content blockquote.alert > .alert-heading {
     color: var(--alert-color);
