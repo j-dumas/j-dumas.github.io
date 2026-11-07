@@ -93,6 +93,7 @@ article.main .home-card h2 {
     border: none;
     font-size: 1.6em;
     line-height: 1.4;
+    font-weight: bold;
 }
 
 article.main .home-card p {
