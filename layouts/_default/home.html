@@ -6,7 +6,15 @@
                     <img class="logo" src="{{ $.Site.BaseURL }}{{ . }}" />
                 {{ end }}
 
-                <h1 class="title-caption">{{ $.Site.Title }}</h1>
+                {{ with $.Site.Params.header.title }}
+                    <h1 class="title-caption">{{ . }}</h1>
+                {{ end }}
+
+                {{ with $.Site.Params.header.subtitle }}
+                    <h2 class="subtitle">
+                        {{ . }}
+                    </h2>
+                {{ end }}
             </div>
         </div>
 

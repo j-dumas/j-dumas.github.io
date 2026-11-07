@@ -8,6 +8,7 @@ theme = 'editor'
         localCss = ["css/*"]
     [params.header]
         title = "Jérémy Dumas"
+        subtitle = "My Portfolio Blog"
     [params.footer]
         gitHash = false
     [params.footer.socialLink]

@@ -62,6 +62,7 @@ article.main > div.home > div.title > h1.title-caption {
 
 article.main > div.home > div.title > h2.subtitle {
     color: var(--subtitle);
+    font-weight: bold;
 }
 
 article.main > div.title > div.author-date-readtime,
