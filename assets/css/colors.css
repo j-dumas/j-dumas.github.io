@@ -212,6 +212,14 @@ article.main .home-card.red:hover {
     border-color: var(--red);
 }
 
+article.main .home-card.orange h2 {
+    color: var(--peach);
+}
+
+article.main .home-card.orange:hover {
+    border-color: var(--peach);
+}
+
 /* Section tree in walkthroughs */
 article.main > div.home > div.recommend > div.right ul.section-tree > li > a:hover {
     background-color: var(--surface0);

@@ -19,13 +19,13 @@ featured = true
 title = "Notes"
 description = "A collection of notes on what I've been learning."
 link = "/notes/"
-accent = "blue"
+accent = "orange"
 
 [[cards]]
 title = "Projects"
 description = "A collection of notes on projects I've made."
 link = "/projects/"
-accent = "blue"
+accent = "purple"
 
 [[cards]]
 title = "Writeups"
