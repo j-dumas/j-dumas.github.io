@@ -35,6 +35,9 @@ article.main > div.home > div.title > h2.subtitle {
     color: var(--subtitle);
 }
 
+article.main > div.content > h2#interests + ul {
+    columns: 2;
+}
 
 /* ---------- Cards ---------- */
 /* Card grid */
