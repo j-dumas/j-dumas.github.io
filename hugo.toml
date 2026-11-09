@@ -4,6 +4,8 @@ title = 'Jérémy Dumas'
 theme = 'editor'
 
 [params]
+    [params.site]
+        faviconUrl = "/favicon.png"
     [params.globalFrontMatter]
         localCss = ["css/*"]
     [params.header]
