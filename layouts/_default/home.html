@@ -6,15 +6,27 @@
                     <img class="logo" src="{{ $.Site.BaseURL }}{{ . }}" />
                 {{ end }}
 
-                {{ with $.Site.Params.header.title }}
-                    <h1 class="title-caption">{{ . }}</h1>
-                {{ end }}
+                <div class="flex-title">
+                    {{ with $.Site.Params.header.title }}
+                        <h1 class="title-caption">{{ . }}</h1>
+                    {{ end }}
+
+                    <div>
+                        <a href="https://github.com/j-dumas" target="_blank">
+                            <img src="https://skillicons.dev/icons?i=github" />
+                        </a>
+                        <a href="https://www.linkedin.com/in/j-dumas/" target="_blank">
+                            <img src="https://skillicons.dev/icons?i=linkedin" />
+                        </a>
+                    </div>
+                </div>
 
                 {{ with $.Site.Params.header.subtitle }}
                     <h2 class="subtitle">
                         {{ . }}
                     </h2>
                 {{ end }}
+
             </div>
         </div>
 
@@ -35,10 +47,11 @@
             {{ end }}
         </div>
 
-        <p align="center">
-          <a href="https://skillicons.dev">
-            <img src="https://skillicons.dev/icons?i=c,cpp,zig,python,neovim,linux,latex&perline=8" />
-          </a>
-        </p>
+        <!--  <p align="center"> -->
+        <!--     <a href="https://skillicons.dev" target="_blank"> -->
+        <!--         <img src="https://skillicons.dev/icons?i=c,cpp,zig,python,neovim,linux,latex&perline=7" /> -->
+        <!--     </a> -->
+        <!-- </p> -->
+
     </article>
 {{ end }}

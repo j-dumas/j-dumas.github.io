@@ -56,7 +56,7 @@ article.main > hr {
 
 /* ---------- Titles ---------- */
 article.main > div.title > h1.title-header,
-article.main > div.home > div.title > h1.title-caption {
+article.main > div.home > div.title > div.flex-title > h1.title-caption {
     color: var(--title);
 }
 
