@@ -7,7 +7,7 @@ solved = true
 
 | Info        	|                           	|
 |-------------	|---------------------------	|
-| Category    	| {{< param category >}}    	|
+| Category    	| {{< category >}}             	|
 | Description 	| {{< desc >}}              	|
 | Flag        	| `HF-{JWT_S3cr3t_Cr4ck3d}` 	|
 

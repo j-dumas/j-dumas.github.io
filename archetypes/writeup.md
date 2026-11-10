@@ -8,7 +8,7 @@ solved = true
 
 | Info        	|                                        	|
 |-------------	|----------------------------------------	|
-| Category    	| {{< param category >}}                 	|
+| Category    	| {{< category >}}                         	|
 | Description 	| {{< desc >}}                           	|
 | Flag        	| `` 	|
 

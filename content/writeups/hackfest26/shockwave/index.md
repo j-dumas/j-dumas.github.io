@@ -7,7 +7,7 @@ solved = true
 
 | Info        	|                                                   	|
 |-------------	|---------------------------------------------------	|
-| Category    	| {{< param category >}}                            	|
+| Category    	| {{< category >}}                                  	|
 | Description 	| {{< desc >}}                                      	|
 | Endpoint    	| Provided by the platform, port `8080`             	|
 | Flag        	| `HFCTF{sh3llshock_p1_cgi_env_variable_1nto_exec}` 	|

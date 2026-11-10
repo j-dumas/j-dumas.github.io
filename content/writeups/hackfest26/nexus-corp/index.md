@@ -7,7 +7,7 @@ solved = true
 
 | Info        	|                                        	|
 |-------------	|----------------------------------------	|
-| Category    	| {{< param category >}}                 	|
+| Category    	| {{< category >}}                         	|
 | Description 	| {{< desc >}}                           	|
 | Endpoint    	| Provided by the platform, port `3000`    	|
 | Flag        	| `HFCTF{spr4y_1d0r_f0rg3ry_fu1l_chain}` 	|
